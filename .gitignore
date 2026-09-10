@@ -1,0 +1,6 @@
+target/
+.nb-gradle/
+.nbprops
+*.log
+.DS_Store
+nbproject/private/
