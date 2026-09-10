@@ -1,0 +1,23 @@
+<server description="pos server">
+    <featureManager>
+        <feature>webProfile-11.0</feature>
+    </featureManager>
+
+    <dataSource id="pgdb" jndiName="jdbc/pgdb">
+        <jdbcDriver libraryRef="PostgreSQLDriver"/>
+      <properties.postgresql 
+    serverName="localhost" 
+    portNumber="5432" 
+    databaseName="pos_ppi115" 
+    user="postgres" 
+    password="postgrespassword"/>
+    
+    
+    </dataSource>
+
+    <library id="PostgreSQLDriver">
+        <fileset dir="${server.config.dir}/lib" includes="postgresql-*.jar"/>
+    </library>
+
+    <webApplication id="cafefe" location="cafefe-1.0-SNAPSHOT.war" contextRoot="/cafefe" />
+</server>

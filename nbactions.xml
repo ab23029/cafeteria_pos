@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Run file</actionName>
+            <displayName>Run file</displayName>
+            <goals>
+                <goal>liberty:dev</goal>
+            </goals>
+            <properties>
+                <exec.args>${project.build.directory}/${project.build.finalName}/index.html</exec.args>
+            </properties>
+        </action>
+        <action>
+            <actionName>run.single.deploy</actionName>
+            <packagings>
+                <packaging>war</packaging>
+            </packagings>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
+            </properties>
+        </action>
+    </actions>
