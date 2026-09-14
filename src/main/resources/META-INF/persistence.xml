@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
-    <!-- Define Persistence Unit -->
-    <persistence-unit name="my_persistence_unit">
-        
-    </persistence-unit>
+  <!-- Define Persistence Unit -->
+  <persistence-unit name="cafeteriaPU" transaction-type="JTA">
+    <jta-data-source>jdbc/pgdb</jta-data-source>
+    <class>sv.edu.ues.cafeteria_pos.entity.EmpleadoRol</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.ProductoTipoProducto</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Rol</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Orden</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.ProductoCaracteristica</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Factura</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.TipoDescuento</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Empleado</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.OrdenProducto</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.TipoCaracteristica</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Descuento</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Pago</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Producto</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Caja</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.DescuentoProducto</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.TipoProducto</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.Caracteristica</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.PagoDetalle</class>
+    <class>sv.edu.ues.cafeteria_pos.entity.FacturaOrdenProducto</class>
+    <properties>
+      <!-- Genera y actualiza las tablas automaticamente en PostgreSQL -->
+      <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
+    </properties>
+  </persistence-unit>
 </persistence>
