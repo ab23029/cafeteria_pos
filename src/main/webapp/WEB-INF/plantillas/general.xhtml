@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.org/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+
+    <h:head>
+        <title><ui:insert name="titulo">Sistema POS Cafefe</ui:insert></title>
+        <h:outputStylesheet library="css" name="estilos.css" />
+    </h:head>
+
+    <h:body>
+        <p:growl id="messages" showDetail="true" />
+
+        <!-- 1. Header (Banner dividido en 3) -->
+        <header class="header-container">
+            <div class="header-logo">
+                <h2>Cafefe POS</h2>
+            </div>
+            <div class="header-titulo">
+                <h1><ui:insert name="header_titulo">Gestión del Sistema</ui:insert></h1>
+            </div>
+            <div class="header-usuario">
+                <!-- Selector Dinámico de Idioma (i18n) -->
+                <h:form id="frmIdioma">
+                    <p:selectOneMenu value="#{sesionUsuario.idiomaSeleccionado}" onchange="submit()">
+                        <f:selectItem itemLabel="Español" itemValue="es" />
+                        <f:selectItem itemLabel="English" itemValue="en" />
+                    </p:selectOneMenu>
+                </h:form>
+            </div>
+        </header>
+
+        <!-- 2. Cuerpo Principal con Menú Lateral -->
+        <div class="main-layout">
+            <nav class="sidebar-menu">
+                <h3>Tipos</h3>
+                <h:form id="frmMenu">
+                    <p:menu style="width:100%">
+                        <p:menuitem value="Tipo Descuento" outcome="TipoDescuento.xhtml" icon="pi pi-tags" />
+                        <p:menuitem value="Tipo Caracteristica" outcome="tipo_caracteristica.xhtml" icon="pi pi-list" />
+                    </p:menu>
+                </h:form>
+            </nav>
+
+            <main class="content-area">
+                <ui:insert name="contenido">
+                    <!-- Contenido dinámico según el CRUD activo -->
+                </ui:insert>
+            </main>
+        </div>
+
+        <!-- 3. Footer -->
+        <footer class="footer-container">
+            <p>Todos los derechos reservados © 2026 - Universidad de El Salvador (PPI115)</p>
+        </footer>
+    </h:body>
+</html>

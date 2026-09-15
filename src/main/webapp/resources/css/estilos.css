@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6f9;
+}
+
+/* Header dividido en 3 zonas (Logo, Título/Descripción, Idioma/Perfil) */
+.header-container {
+    display: flex;
+    justify: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.header-logo {
+    width: 20%;
+}
+
+.header-titulo {
+    width: 60%;
+    text-align: center;
+}
+
+.header-usuario {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Layout Principal con Menú Lateral a la izquierda */
+.main-layout {
+    display: flex;
+    min-height: calc(100vh - 120px);
+}
+
+.sidebar-menu {
+    width: 220px;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    padding: 15px;
+}
+
+.content-area {
+    flex-grow: 1;
+    padding: 25px;
+}
+
+/* Botón Nuevo Azul */
+.btn-primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+/* Footer */
+.footer-container {
+    text-align: center;
+    padding: 15px;
+    background-color: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.9em;
+    color: #666;
+}

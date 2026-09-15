@@ -5,19 +5,23 @@
 
     <dataSource id="pgdb" jndiName="jdbc/pgdb">
         <jdbcDriver libraryRef="PostgreSQLDriver"/>
-      <properties.postgresql 
-    serverName="localhost" 
-    portNumber="5432" 
-    databaseName="pos_ppi115" 
-    user="postgres" 
-    password="postgrespassword"/>
-    
-    
+        <properties.postgresql 
+            serverName="localhost" 
+            portNumber="5432" 
+            databaseName="pos_ppi115" 
+            user="postgres" 
+            password="postgrespassword"/>
     </dataSource>
 
     <library id="PostgreSQLDriver">
         <fileset dir="${server.config.dir}/lib" includes="postgresql-*.jar"/>
     </library>
 
-    <webApplication id="cafefe" location="cafefe-1.0-SNAPSHOT.war" contextRoot="/cafefe" />
+    <library id="global-libs">
+        <fileset dir="${shared.resource.dir}/primefaces" includes="*.jar"/>
+    </library>
+
+    <webApplication id="cafefe" location="cafefe-1.0-SNAPSHOT.war" contextRoot="/cafefe">
+        <classloader commonLibraryRef="global-libs" />
+    </webApplication>
 </server>
