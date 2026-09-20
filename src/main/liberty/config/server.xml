@@ -1,16 +1,20 @@
 <server description="pos server">
     <featureManager>
-        <feature>webProfile-11.0</feature>
+        <feature>webProfile-10.0</feature>
+        <feature>faces-4.0</feature>
+        <feature>persistence-3.1</feature>               
     </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint" httpPort="9080" httpsPort="9443" host="*" />
 
     <dataSource id="pgdb" jndiName="jdbc/pgdb">
         <jdbcDriver libraryRef="PostgreSQLDriver"/>
-        <properties.postgresql 
-            serverName="localhost" 
-            portNumber="5432" 
-            databaseName="pos_ppi115" 
-            user="postgres" 
-            password="postgrespassword"/>
+        <properties.postgresql
+            serverName="localhost"
+            portNumber="5432"
+            databaseName="cafeteria_pos"
+            user="postgres"
+            password="clave77"/>
     </dataSource>
 
     <library id="PostgreSQLDriver">
@@ -21,7 +25,7 @@
         <fileset dir="${shared.resource.dir}/primefaces" includes="*.jar"/>
     </library>
 
-    <webApplication id="cafefe" location="cafefe-1.0-SNAPSHOT.war" contextRoot="/cafefe">
+    <webApplication id="cafeteria_pos" location="cafeteria_pos-1.0-SNAPSHOT.war" contextRoot="/cafeteria_pos">
         <classloader commonLibraryRef="global-libs" />
     </webApplication>
 </server>
