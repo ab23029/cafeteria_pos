@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
-  <!-- Define Persistence Unit -->
-  <persistence-unit name="cafeteriaPU" transaction-type="JTA">
+<persistence version="3.0" 
+             xmlns="https://jakarta.ee/xml/ns/persistence" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+  <persistence-unit name="cafefePU" transaction-type="JTA">
     <jta-data-source>jdbc/pgdb</jta-data-source>
+    
     <class>sv.edu.ues.cafeteria_pos.entity.EmpleadoRol</class>
     <class>sv.edu.ues.cafeteria_pos.entity.ProductoTipoProducto</class>
     <class>sv.edu.ues.cafeteria_pos.entity.Rol</class>
@@ -22,9 +26,16 @@
     <class>sv.edu.ues.cafeteria_pos.entity.Caracteristica</class>
     <class>sv.edu.ues.cafeteria_pos.entity.PagoDetalle</class>
     <class>sv.edu.ues.cafeteria_pos.entity.FacturaOrdenProducto</class>
+    
     <properties>
-      <!-- Genera y actualiza las tablas automaticamente en PostgreSQL -->
-      <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
+      <!-- 'create' crea las tablas si no existen; si la base ya existe usa 'none' -->
+      <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+      
+      <!-- Le indica a EclipseLink que la BD es PostgreSQL -->
+      <property name="eclipselink.target-database" value="PostgreSQL"/>
+      
+      <!-- Habilita logs detallados de EclipseLink en consola -->
+      <property name="eclipselink.logging.level" value="FINE"/>
     </properties>
   </persistence-unit>
 </persistence>

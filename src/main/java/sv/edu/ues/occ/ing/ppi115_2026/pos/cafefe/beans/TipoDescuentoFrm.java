@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
+import jakarta.faces.event.ActionEvent;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +39,25 @@ public class TipoDescuentoFrm implements Serializable {
         }
     }
 
+    // Sobrecarga para actionListener="#{tipoDescuentoFrm.btnNuevoHandler}"
+    public void btnNuevoHandler(ActionEvent ae) {
+        btnNuevoHandler();
+    }
+
+    // Método para invocaciones directas
+    public void btnNuevoHandler() {
+        this.registroSeleccionado = new TipoDescuento();
+    }
+
+    // Sobrecarga para actionListener="#{tipoDescuentoFrm.btnGuardarHandler}"
+    public void btnGuardarHandler(ActionEvent ae) {
+        guardar();
+    }
+
+    public void btnGuardarHandler() {
+        guardar();
+    }
+
     public void guardar() {
         try {
             if (this.registroSeleccionado != null) {
@@ -51,6 +71,10 @@ public class TipoDescuentoFrm implements Serializable {
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al guardar", ex);
         }
+    }
+
+    public List<TipoDescuento> getModelo() {
+        return registros;
     }
 
     public List<TipoDescuento> getRegistros() {

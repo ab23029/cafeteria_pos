@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Root;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,11 +90,13 @@ public class TipoDescuentoDAOTest {
     }
 
     @Test
+
+    @SuppressWarnings("unchecked")
     public void testFindRangeSuccess() {
         CriteriaBuilder cbMock = Mockito.mock(CriteriaBuilder.class);
-        CriteriaQuery cqMock = Mockito.mock(CriteriaQuery.class);
-        Root rootMock = Mockito.mock(Root.class);
-        TypedQuery queryMock = Mockito.mock(TypedQuery.class);
+        CriteriaQuery<TipoDescuento> cqMock = Mockito.mock(CriteriaQuery.class);
+        Root<TipoDescuento> rootMock = Mockito.mock(Root.class);
+        TypedQuery<TipoDescuento> queryMock = Mockito.mock(TypedQuery.class);
 
         Mockito.when(emMock.getCriteriaBuilder()).thenReturn(cbMock);
         Mockito.when(cbMock.createQuery(TipoDescuento.class)).thenReturn(cqMock);
@@ -116,17 +119,19 @@ public class TipoDescuentoDAOTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCountSuccess() {
         CriteriaBuilder cbMock = Mockito.mock(CriteriaBuilder.class);
-        CriteriaQuery cqLongMock = Mockito.mock(CriteriaQuery.class);
-        Root rootMock = Mockito.mock(Root.class);
-        TypedQuery countQueryMock = Mockito.mock(TypedQuery.class);
+        CriteriaQuery<Long> cqLongMock = Mockito.mock(CriteriaQuery.class);
+        Root<TipoDescuento> rootMock = Mockito.mock(Root.class);
+        Expression<Long> countExprMock = Mockito.mock(Expression.class);
+        TypedQuery<Long> countQueryMock = Mockito.mock(TypedQuery.class);
 
         Mockito.when(emMock.getCriteriaBuilder()).thenReturn(cbMock);
         Mockito.when(cbMock.createQuery(Long.class)).thenReturn(cqLongMock);
         Mockito.when(cqLongMock.from(TipoDescuento.class)).thenReturn(rootMock);
-        Mockito.when(cbMock.count(rootMock)).thenReturn(null);
-        Mockito.when(cqLongMock.select(null)).thenReturn(cqLongMock);
+        Mockito.when(cbMock.count(rootMock)).thenReturn(countExprMock);
+        Mockito.when(cqLongMock.select(countExprMock)).thenReturn(cqLongMock);
         Mockito.when(emMock.createQuery(cqLongMock)).thenReturn(countQueryMock);
         Mockito.when(countQueryMock.getSingleResult()).thenReturn(5L);
 

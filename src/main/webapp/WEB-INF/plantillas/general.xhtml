@@ -1,12 +1,13 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.org/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="jakarta.faces.core">
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title><ui:insert name="titulo">Sistema POS Cafefe</ui:insert></title>
         <h:outputStylesheet library="css" name="estilos.css" />
     </h:head>
@@ -39,15 +40,15 @@
                 <h3>Tipos</h3>
                 <h:form id="frmMenu">
                     <p:menu style="width:100%">
-                        <p:menuitem value="Tipo Descuento" outcome="TipoDescuento.xhtml" icon="pi pi-tags" />
-                        <p:menuitem value="Tipo Caracteristica" outcome="tipo_caracteristica.xhtml" icon="pi pi-list" />
+                        <p:menuitem value="Tipo Descuento" outcome="TipoDescuento" icon="pi pi-tags" />
+                        <p:menuitem value="Tipo Caracteristica" outcome="tipoCaracteristica" icon="pi pi-list" />
                     </p:menu>
                 </h:form>
             </nav>
 
             <main class="content-area">
                 <ui:insert name="contenido">
-                    <!-- Contenido dinámico según el CRUD activo -->
+                    <!-- Contenido dinámico renderizado desde las vistas -->
                 </ui:insert>
             </main>
         </div>

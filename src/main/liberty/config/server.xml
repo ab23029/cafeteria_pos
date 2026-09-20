@@ -1,8 +1,11 @@
 <server description="pos server">
     <featureManager>
-        <feature>webProfile-11.0</feature>
+        <feature>webProfile-10.0</feature>
+        <!-- Añade esta línea para JPA / Jakarta Persistence -->
+        <feature>persistence-3.1</feature>
     </featureManager>
 
+    <!-- Conexión a Base de Datos PostgreSQL -->
     <dataSource id="pgdb" jndiName="jdbc/pgdb">
         <jdbcDriver libraryRef="PostgreSQLDriver"/>
         <properties.postgresql 
@@ -14,14 +17,6 @@
     </dataSource>
 
     <library id="PostgreSQLDriver">
-        <fileset dir="${server.config.dir}/lib" includes="postgresql-*.jar"/>
+        <fileset dir="${server.config.dir}/lib/global" includes="postgresql-*.jar"/>
     </library>
-
-    <library id="global-libs">
-        <fileset dir="${shared.resource.dir}/primefaces" includes="*.jar"/>
-    </library>
-
-    <webApplication id="cafefe" location="cafefe-1.0-SNAPSHOT.war" contextRoot="/cafefe">
-        <classloader commonLibraryRef="global-libs" />
-    </webApplication>
 </server>
