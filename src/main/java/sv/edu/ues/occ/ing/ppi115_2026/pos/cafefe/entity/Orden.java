@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity;
 
 import jakarta.persistence.Basic;
@@ -10,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -20,36 +15,34 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.UUID;
-import java.util.UUID;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
-/**
- *
- * @author brandon
- */
 @Entity
 @Table(name = "orden")
 @NamedQueries({
-    @NamedQuery(name = "Orden.findAll", query = "SELECT o FROM Orden o"),
-    @NamedQuery(name = "Orden.findByFechaCreacion", query = "SELECT o FROM Orden o WHERE o.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "Orden.findAll", query = "SELECT o FROM Orden o")})
 public class Orden implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_orden")
     private UUID idOrden;
+
     @Column(name = "fecha_creacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @OneToMany(mappedBy = "idOrden", fetch = FetchType.LAZY)
-    private List<OrdenProducto> ordenProductoList;
+
     @JoinColumn(name = "id_empleado_rol", referencedColumnName = "id_empleado_rol")
     @ManyToOne(fetch = FetchType.LAZY)
     private EmpleadoRol idEmpleadoRol;
+
+    @OneToMany(mappedBy = "idOrden", fetch = FetchType.LAZY)
+    private List<OrdenProducto> ordenProductoList;
 
     public Orden() {
     }
@@ -74,20 +67,20 @@ public class Orden implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public List<OrdenProducto> getOrdenProductoList() {
-        return ordenProductoList;
-    }
-
-    public void setOrdenProductoList(List<OrdenProducto> ordenProductoList) {
-        this.ordenProductoList = ordenProductoList;
-    }
-
     public EmpleadoRol getIdEmpleadoRol() {
         return idEmpleadoRol;
     }
 
     public void setIdEmpleadoRol(EmpleadoRol idEmpleadoRol) {
         this.idEmpleadoRol = idEmpleadoRol;
+    }
+
+    public List<OrdenProducto> getOrdenProductoList() {
+        return ordenProductoList;
+    }
+
+    public void setOrdenProductoList(List<OrdenProducto> ordenProductoList) {
+        this.ordenProductoList = ordenProductoList;
     }
 
     @Override
@@ -99,7 +92,6 @@ public class Orden implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Orden)) {
             return false;
         }
@@ -114,5 +106,4 @@ public class Orden implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Orden[ idOrden=" + idOrden + " ]";
     }
-    
 }

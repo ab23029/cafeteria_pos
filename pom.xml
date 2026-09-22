@@ -9,6 +9,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
         <jakartaee>10.0.0</jakartaee>
     </properties>
 
@@ -70,14 +72,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>21</source>
                     <target>21</target>
                 </configuration>
             </plugin>
 
-            <!-- Configuración para habilitar el soporte de Byte Buddy en JDKs nuevos durante los tests -->
+            <!-- Habilita el soporte de Byte Buddy en JDK 21 durante los tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -90,8 +92,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
             </plugin>
+
+            <!-- Plugin de OpenLiberty para despliegue y dev-mode -->
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
@@ -105,7 +112,6 @@
                     </assemblyArtifact>
                     <serverName>pos-cafeteria-ppi115</serverName>
                     <installAppPackages>project</installAppPackages>
-                    <!-- Copia el JAR de PostgreSQL a la carpeta lib/global del servidor -->
                     <copyDependencies>
                         <dependencyGroup>
                             <location>lib/global</location>

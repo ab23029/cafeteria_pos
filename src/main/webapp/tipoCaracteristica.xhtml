@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/plantillas/general.xhtml">
+
+    <ui:define name="titulo">Gestión de Tipos de Característica</ui:define>
+    <ui:define name="header_titulo">Tipos de Característica</ui:define>
+
+    <ui:define name="contenido">
+        <h:form id="frmTipoCaracteristica">
+            <p:panel header="Formulario de Tipo Característica">
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="nombre" value="Nombre:" />
+                    <p:inputText id="nombre" value="#{tipoCaracteristicaBean.registro.nombre}" required="true" />
+                </h:panelGrid>
+                
+                <p:commandButton value="Guardar" actionListener="#{tipoCaracteristicaBean.guardar()}" 
+                                 update="frmTipoCaracteristica :messages" icon="pi pi-save" />
+            </p:panel>
+
+            <p:spacer height="20" />
+
+            <p:dataTable value="#{tipoCaracteristicaBean.lista}" var="tc" id="tblTipoCaracteristica" paginator="true" rows="10">
+                <p:column headerText="ID">
+                    <h:outputText value="#{tc.idTipoCaracteristica}" />
+                </p:column>
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{tc.nombre}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
