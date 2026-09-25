@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/plantillas/general.xhtml">
@@ -14,6 +15,14 @@
                 <h:panelGrid columns="2">
                     <p:outputLabel for="nombre" value="Nombre:" />
                     <p:inputText id="nombre" value="#{productoBean.registro.nombre}" required="true" />
+
+                    <p:outputLabel for="precioSugerido" value="Precio Sugerido:" />
+                    <p:inputNumber id="precioSugerido" 
+                                   value="#{productoBean.registro.precioSugerido}" 
+                                   symbol="$ " 
+                                   decimalPlaces="2" 
+                                   minValue="0" 
+                                   required="true" />
                 </h:panelGrid>
                 
                 <p:commandButton value="Guardar" actionListener="#{productoBean.guardar()}" 
@@ -28,6 +37,11 @@
                 </p:column>
                 <p:column headerText="Nombre">
                     <h:outputText value="#{p.nombre}" />
+                </p:column>
+                <p:column headerText="Precio Sugerido">
+                    <h:outputText value="#{p.precioSugerido}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
                 </p:column>
             </p:dataTable>
         </h:form>

@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -18,9 +17,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.UUID;
-import java.util.UUID;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -35,27 +34,37 @@ import java.util.List;
     @NamedQuery(name = "Producto.findByComentarios", query = "SELECT p FROM Producto p WHERE p.comentarios = :comentarios")})
 public class Producto implements Serializable {
 
-    @Size(max = 155)
-    @Column(name = "nombre")
-    private String nombre;
-    @Size(max = 2147483647)
-    @Column(name = "comentarios")
-    private String comentarios;
-
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_producto")
     private UUID idProducto;
+
+    @Size(max = 155)
+    @Column(name = "nombre")
+    private String nombre;
+
+    @Column(name = "precio_sugerido", nullable = false)
+    private BigDecimal precioSugerido;
+
     @Column(name = "activo")
     private Boolean activo;
+
+    @Size(max = 2147483647)
+    @Column(name = "comentarios")
+    private String comentarios;
+
     @OneToMany(mappedBy = "idProducto", fetch = FetchType.LAZY)
     private List<ProductoCaracteristica> productoCaracteristicaList;
+
     @OneToMany(mappedBy = "idProducto", fetch = FetchType.LAZY)
     private List<OrdenProducto> ordenProductoList;
+
     @OneToMany(mappedBy = "idProducto", fetch = FetchType.LAZY)
     private List<DescuentoProducto> descuentoProductoList;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto", fetch = FetchType.LAZY)
     private List<ProductoTipoProducto> productoTipoProductoList;
 
@@ -74,6 +83,21 @@ public class Producto implements Serializable {
         this.idProducto = idProducto;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public BigDecimal getPrecioSugerido() {
+        return precioSugerido;
+    }
+
+    public void setPrecioSugerido(BigDecimal precioSugerido) {
+        this.precioSugerido = precioSugerido;
+    }
 
     public Boolean getActivo() {
         return activo;
@@ -83,6 +107,13 @@ public class Producto implements Serializable {
         this.activo = activo;
     }
 
+    public String getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(String comentarios) {
+        this.comentarios = comentarios;
+    }
 
     public List<ProductoCaracteristica> getProductoCaracteristicaList() {
         return productoCaracteristicaList;
@@ -125,7 +156,6 @@ public class Producto implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Producto)) {
             return false;
         }
@@ -140,21 +170,4 @@ public class Producto implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Producto[ idProducto=" + idProducto + " ]";
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getComentarios() {
-        return comentarios;
-    }
-
-    public void setComentarios(String comentarios) {
-        this.comentarios = comentarios;
-    }
-    
 }
