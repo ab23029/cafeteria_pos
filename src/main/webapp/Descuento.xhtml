@@ -15,9 +15,11 @@
                 <h:panelGrid columns="2" cellpadding="5">
                     <p:outputLabel for="cboTipo" value="Tipo de Descuento: *" />
                     <p:selectOneMenu id="cboTipo" value="#{descuentoFrm.idTipoDescuentoSeleccionado}" required="true">
-                        <f:selectItem itemLabel="-- Seleccione --" itemValue="" />
-                        <f:selectItems value="#{descuentoFrm.tipoDescuentoDAO.findAll()}" var="td"
-                                       itemLabel="#{td.nombre}" itemValue="#{td.idTipoDescuento}" />
+                        <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{descuentoFrm.listaTiposDescuento}" 
+                                       var="td" 
+                                       itemLabel="#{td.nombre}" 
+                                       itemValue="#{td.idTipoDescuento}" />
                     </p:selectOneMenu>
 
                     <p:outputLabel for="nombre" value="Nombre del Descuento: *" />
