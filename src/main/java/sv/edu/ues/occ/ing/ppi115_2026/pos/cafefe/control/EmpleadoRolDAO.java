@@ -1,31 +1,40 @@
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.EmpleadoRol;
 
 @Stateless
-public class EmpleadoRolDAO {
+public class EmpleadoRolDAO extends DefaultDAO<EmpleadoRol> implements EmpleadoRolDAOInterface, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @PersistenceContext(unitName = "cafefePU")
     private EntityManager em;
 
-    public void create(EmpleadoRol entity) {
-        em.persist(entity);
+    public EmpleadoRolDAO() {
+        super(EmpleadoRol.class);
     }
 
-    public void delete(EmpleadoRol entity) {
-        em.remove(em.merge(entity));
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
     }
 
-    public List<EmpleadoRol> findByEmpleado(Object idEmpleado) {
+    @Override
+    public List<EmpleadoRol> findByEmpleado(UUID idEmpleado) {
         if (idEmpleado == null) return Collections.emptyList();
-        return em.createQuery("SELECT er FROM EmpleadoRol er WHERE er.idEmpleado.idEmpleado = :idEmpleado", EmpleadoRol.class)
-                 .setParameter("idEmpleado", idEmpleado)
-                 .getResultList();
+        try {
+            return em.createQuery("SELECT er FROM EmpleadoRol er WHERE er.idEmpleado.idEmpleado = :idEmpleado", EmpleadoRol.class)
+                     .setParameter("idEmpleado", idEmpleado)
+                     .getResultList();
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 }

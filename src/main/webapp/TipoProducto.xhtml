@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/plantillas/general.xhtml">
+
+    <ui:define name="titulo">Tipo de Producto</ui:define>
+    <ui:define name="header_titulo">Gestión de Tipos de Producto</ui:define>
+
+    <ui:define name="contenido">
+        <h:form id="frmAcciones">
+            <p:commandButton value="Nuevo Tipo Producto" 
+                             styleClass="btn-primary" 
+                             icon="pi pi-plus" 
+                             actionListener="#{tipoProductoFrm.nuevoRegistro()}"
+                             update=":frmNuevo"
+                             oncomplete="PF('dlgNuevo').show()" 
+                             style="margin-bottom: 15px;" />
+        </h:form>
+
+        <h:form id="frmTabla">
+            <p:dataTable id="tblTipoProducto" 
+                         var="tp" 
+                         value="#{tipoProductoFrm.listaTipoProducto}" 
+                         paginator="true" 
+                         rows="5"
+                         rowsPerPageTemplate="5,10,15">
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{tp.idTipoProducto}" />
+                </p:column>
+
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{tp.nombre}" />
+                </p:column>
+
+                <p:column headerText="Estado">
+                    <p:tag value="#{tp.activo ? 'ACTIVO' : 'INACTIVO'}" 
+                           severity="#{tp.activo ? 'success' : 'danger'}" />
+                </p:column>
+
+                <p:column headerText="Observaciones">
+                    <h:outputText value="#{tp.observaciones}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog header="Nuevo Tipo Producto" widgetVar="dlgNuevo" modal="true" responsive="true">
+            <h:form id="frmNuevo">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel value="Nombre:" for="txtNombre" />
+                    <p:inputText id="txtNombre" value="#{tipoProductoFrm.registroSeleccionado.nombre}" required="true" />
+
+                    <p:outputLabel value="Estado:" for="chkActivo" />
+                    <p:selectBooleanCheckbox id="chkActivo" value="#{tipoProductoFrm.registroSeleccionado.activo}" />
+
+                    <p:outputLabel value="Observaciones:" for="txtObs" />
+                    <p:inputTextarea id="txtObs" value="#{tipoProductoFrm.registroSeleccionado.observaciones}"/>
+                </h:panelGrid>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <p:commandButton value="Guardar" 
+                                     actionListener="#{tipoProductoFrm.guardar()}" 
+                                     update=":frmTabla:tblTipoProducto :frmNuevo :messages" 
+                                     oncomplete="if (!args.validationFailed) PF('dlgNuevo').hide()" 
+                                     icon="pi pi-check" />
+                </div>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>
