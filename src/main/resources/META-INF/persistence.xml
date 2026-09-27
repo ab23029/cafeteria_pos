@@ -7,35 +7,37 @@
   <persistence-unit name="cafefePU" transaction-type="JTA">
     <jta-data-source>jdbc/pgdb</jta-data-source>
     
-    <class>sv.edu.ues.cafeteria_pos.entity.EmpleadoRol</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.ProductoTipoProducto</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Rol</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Orden</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.ProductoCaracteristica</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Factura</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.TipoDescuento</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Empleado</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.OrdenProducto</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.TipoCaracteristica</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Descuento</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Pago</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Producto</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Caja</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.DescuentoProducto</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.TipoProducto</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.Caracteristica</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.PagoDetalle</class>
-    <class>sv.edu.ues.cafeteria_pos.entity.FacturaOrdenProducto</class>
+    <!-- Paquetes corregidos apuntando a las entidades reales de tu proyecto -->
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.EmpleadoRol</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.ProductoTipoProducto</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Rol</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Orden</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.ProductoCaracteristica</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Factura</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoDescuento</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Empleado</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.OrdenProducto</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoCaracteristica</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Descuento</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Pago</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Producto</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Caja</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.DescuentoProducto</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoProducto</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Caracteristica</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.PagoDetalle</class>
+    <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.FacturaOrdenProducto</class>
     
     <properties>
-      <!-- 'create' crea las tablas si no existen; si la base ya existe usa 'none' -->
-      <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+      <!-- Fuerza a JPA a crear automáticamente todas las tablas si no existen -->
+      <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
       
-      <!-- Le indica a EclipseLink que la BD es PostgreSQL -->
+      <!-- Le indica a EclipseLink la base de datos objetivo -->
       <property name="eclipselink.target-database" value="PostgreSQL"/>
       
-      <!-- Habilita logs detallados de EclipseLink en consola -->
+      <!-- Muestra en la consola del servidor las sentencias SQL ejecutadas -->
       <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
     </properties>
   </persistence-unit>
 </persistence>

@@ -1,7 +1,6 @@
 <server description="pos server">
     <featureManager>
         <feature>webProfile-10.0</feature>
-        <!-- Añade esta línea para JPA / Jakarta Persistence -->
         <feature>persistence-3.1</feature>
     </featureManager>
 
