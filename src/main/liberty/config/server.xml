@@ -12,13 +12,13 @@
         <properties.postgresql
             serverName="localhost"
             portNumber="5432"
-            databaseName="cafeteria_pos"
+            databaseName="pos_ppi115"
             user="postgres"
-            password="clave77"/>
+            password="postgrespassword"/>
     </dataSource>
 
     <library id="PostgreSQLDriver">
-        <fileset dir="${server.config.dir}/lib" includes="postgresql-*.jar"/>
+        <fileset dir="${server.config.dir}/lib/global" includes="postgresql-*.jar"/>
     </library>
 
     <library id="global-libs">

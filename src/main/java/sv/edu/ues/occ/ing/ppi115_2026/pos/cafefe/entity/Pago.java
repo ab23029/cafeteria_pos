@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity;
 
 import jakarta.persistence.Basic;
@@ -10,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -19,14 +14,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.UUID;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
-/**
- *
- * @author brandon
- */
 @Entity
 @Table(name = "pago")
 @NamedQueries({
@@ -35,22 +25,26 @@ import java.util.List;
     @NamedQuery(name = "Pago.findByObservaciones", query = "SELECT p FROM Pago p WHERE p.observaciones = :observaciones")})
 public class Pago implements Serializable {
 
-    @Size(max = 20)
-    @Column(name = "estado")
-    private String estado;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
-    private String observaciones;
-
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_pago")
     private UUID idPago;
+
+    @Size(max = 20)
+    @Column(name = "estado")
+    private String estado;
+
+    @Size(max = 2147483647)
+    @Column(name = "observaciones")
+    private String observaciones;
+
     @JoinColumn(name = "id_factura", referencedColumnName = "id_factura")
     @ManyToOne(fetch = FetchType.LAZY)
     private Factura idFactura;
+
     @OneToMany(mappedBy = "idPago", fetch = FetchType.LAZY)
     private List<PagoDetalle> pagoDetalleList;
 
@@ -69,6 +63,21 @@ public class Pago implements Serializable {
         this.idPago = idPago;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
 
     public Factura getIdFactura() {
         return idFactura;
@@ -95,7 +104,6 @@ public class Pago implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Pago)) {
             return false;
         }
@@ -110,21 +118,4 @@ public class Pago implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Pago[ idPago=" + idPago + " ]";
     }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
-    }
-    
 }

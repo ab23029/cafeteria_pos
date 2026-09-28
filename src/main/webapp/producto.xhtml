@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/plantillas/general.xhtml">
+
+    <ui:define name="titulo">Gestión de Productos</ui:define>
+    <ui:define name="header_titulo">Administración de Productos</ui:define>
+
+    <ui:define name="contenido">
+        <h:form id="frmProducto">
+            <p:panel header="Formulario de Producto">
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="nombre" value="Nombre:" />
+                    <p:inputText id="nombre" value="#{productoBean.registro.nombre}" required="true" />
+
+                    <p:outputLabel for="precioSugerido" value="Precio Sugerido:" />
+                    <p:inputNumber id="precioSugerido" 
+                                   value="#{productoBean.registro.precioSugerido}" 
+                                   symbol="$ " 
+                                   decimalPlaces="2" 
+                                   minValue="0" 
+                                   required="true" />
+                </h:panelGrid>
+                
+                <p:commandButton value="Guardar" actionListener="#{productoBean.guardar()}" 
+                                 update="frmProducto :messages" icon="pi pi-save" />
+            </p:panel>
+
+            <p:spacer height="20" />
+
+            <p:dataTable value="#{productoBean.lista}" var="p" id="tblProducto" paginator="true" rows="10">
+                <p:column headerText="ID">
+                    <h:outputText value="#{p.idProducto}" />
+                </p:column>
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{p.nombre}" />
+                </p:column>
+                <p:column headerText="Precio Sugerido">
+                    <h:outputText value="#{p.precioSugerido}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
