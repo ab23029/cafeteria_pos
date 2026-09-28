@@ -7,7 +7,6 @@
   <persistence-unit name="cafefePU" transaction-type="JTA">
     <jta-data-source>jdbc/pgdb</jta-data-source>
     
-    <!-- Paquetes corregidos apuntando a las entidades reales de tu proyecto -->
     <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.EmpleadoRol</class>
     <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.ProductoTipoProducto</class>
     <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Rol</class>
@@ -29,13 +28,8 @@
     <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.FacturaOrdenProducto</class>
     
     <properties>
-      <!-- Fuerza a JPA a crear automáticamente todas las tablas si no existen -->
       <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
-      
-      <!-- Le indica a EclipseLink la base de datos objetivo -->
       <property name="eclipselink.target-database" value="PostgreSQL"/>
-      
-      <!-- Muestra en la consola del servidor las sentencias SQL ejecutadas -->
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
     </properties>
