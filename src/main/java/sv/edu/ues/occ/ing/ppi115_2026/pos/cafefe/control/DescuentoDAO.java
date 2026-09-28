@@ -3,19 +3,16 @@ package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
-import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Factura;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Descuento;
 
 @Stateless
-public class FacturaDAO extends DefaultDAO<Factura> implements FacturaDAOInterface, Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class DescuentoDAO extends DefaultDAO<Descuento> implements DescuentoDAOInterface {
 
     @PersistenceContext(unitName = "cafefePU")
     private EntityManager em;
 
-    public FacturaDAO() {
-        super(Factura.class);
+    public DescuentoDAO() {
+        super(Descuento.class);
     }
 
     @Override

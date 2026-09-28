@@ -6,65 +6,65 @@
                 xmlns:f="jakarta.faces.core"
                 template="/WEB-INF/plantillas/general.xhtml">
 
-    <ui:define name="titulo">Gestión de Tipo de Descuento</ui:define>
-    <ui:define name="header_titulo">Gestión de Tipo de Descuento</ui:define>
+    <ui:define name="titulo">Gestión de Productos</ui:define>
+    <ui:define name="header_titulo">Gestión de Productos</ui:define>
 
     <ui:define name="contenido">
         <h:form id="frmAcciones">
-            <p:commandButton value="Nuevo Tipo Descuento" 
+            <p:commandButton value="Nuevo Producto" 
                              styleClass="btn-primary" 
                              icon="pi pi-plus" 
+                             actionListener="#{productoFrm.nuevoRegistro()}"
+                             update=":frmNuevo"
                              oncomplete="PF('dlgNuevo').show()" 
                              style="margin-bottom: 15px;" />
         </h:form>
 
         <h:form id="frmTabla">
-            <p:dataTable id="tblTipoDescuento" 
-                         var="reg" 
-                         value="#{tipoDescuentoFrm.registros}" 
+            <p:dataTable id="tblProducto" 
+                         var="prod" 
+                         value="#{productoFrm.listaProductos}" 
                          paginator="true" 
                          rows="5"
                          rowsPerPageTemplate="5,10,15">
 
                 <p:column headerText="ID">
-                    <h:outputText value="#{reg.idTipoDescuento}" />
+                    <h:outputText value="#{prod.idProducto}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
-                    <h:outputText value="#{reg.nombre}" />
+                    <h:outputText value="#{prod.nombre}" />
                 </p:column>
 
                 <p:column headerText="Estado">
-                    <p:tag value="#{reg.activo ? 'ACTIVO' : 'INACTIVO'}" 
-                           severity="#{reg.activo ? 'success' : 'danger'}" />
+                    <p:tag value="#{prod.activo ? 'ACTIVO' : 'INACTIVO'}" 
+                           severity="#{prod.activo ? 'success' : 'danger'}" />
                 </p:column>
 
-                <p:column headerText="Indicaciones">
-                    <h:outputText value="#{reg.observaciones}" />
+                <p:column headerText="Comentarios">
+                    <h:outputText value="#{prod.comentarios}" />
                 </p:column>
             </p:dataTable>
         </h:form>
 
-        <p:dialog header="Nuevo Tipo de Descuento" widgetVar="dlgNuevo" modal="true" responsive="true">
+        <p:dialog header="Nuevo Producto" widgetVar="dlgNuevo" modal="true" responsive="true">
             <h:form id="frmNuevo">
                 <h:panelGrid columns="2" cellpadding="5">
                     <p:outputLabel value="Nombre:" for="txtNombre" />
-                    <p:inputText id="txtNombre" value="#{tipoDescuentoFrm.registroSeleccionado.nombre}" required="true" />
+                    <p:inputText id="txtNombre" value="#{productoFrm.registroSeleccionado.nombre}" required="true" />
 
                     <p:outputLabel value="Estado:" for="chkActivo" />
-                    <p:selectBooleanCheckbox id="chkActivo" value="#{tipoDescuentoFrm.registroSeleccionado.activo}" />
+                    <p:selectBooleanCheckbox id="chkActivo" value="#{productoFrm.registroSeleccionado.activo}" />
 
                     <p:outputLabel value="Comentarios:" for="txtComentarios" />
-                    <p:inputTextarea id="txtComentarios" value="#{tipoDescuentoFrm.registroSeleccionado.observaciones}"/>
-                
-                
+                    <p:inputTextarea id="txtComentarios" value="#{productoFrm.registroSeleccionado.comentarios}"/>
                 </h:panelGrid>
 
                 <div style="text-align: right; margin-top: 10px;">
                     <p:commandButton value="Guardar" 
-                                     actionListener="#{tipoDescuentoFrm.guardar()}" 
-                                     update=":frmTabla:tblTipoDescuento :frmNuevo" 
-                                     oncomplete="PF('dlgNuevo').hide()" 
+                                     actionListener="#{productoFrm.guardar()}" 
+                                     update=":frmTabla:tblProducto :frmNuevo :messages" 
+                                     oncomplete="if (!args.validationFailed) PF('dlgNuevo').hide()" 
                                      icon="pi pi-check" />
                 </div>
             </h:form>

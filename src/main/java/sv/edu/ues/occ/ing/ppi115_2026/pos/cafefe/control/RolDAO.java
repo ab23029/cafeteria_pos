@@ -4,18 +4,18 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
-import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Factura;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Rol;
 
 @Stateless
-public class FacturaDAO extends DefaultDAO<Factura> implements FacturaDAOInterface, Serializable {
+public class RolDAO extends DefaultDAO<Rol> implements RolDAOInterface, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @PersistenceContext(unitName = "cafefePU")
     private EntityManager em;
 
-    public FacturaDAO() {
-        super(Factura.class);
+    public RolDAO() {
+        super(Rol.class);
     }
 
     @Override

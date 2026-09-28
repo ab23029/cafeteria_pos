@@ -9,6 +9,8 @@ import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Caja;
 @Stateless
 public class CajaDAO extends DefaultDAO<Caja> implements CajaDAOInterface, Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @PersistenceContext(unitName = "cafefePU")
     private EntityManager em;
 
@@ -19,5 +21,25 @@ public class CajaDAO extends DefaultDAO<Caja> implements CajaDAOInterface, Seria
     @Override
     protected EntityManager getEntityManager() {
         return em;
+    }
+
+    @Override
+    public void crear(Caja reg) {
+        super.create(reg);
+    }
+
+    @Override
+    public void modificar(Caja reg) {
+        super.edit(reg);
+    }
+
+    @Override
+    public void eliminar(Caja reg) {
+        super.remove(reg);
+    }
+
+    @Override
+    public Caja buscarPorId(Object id) {
+        return super.find(id);
     }
 }

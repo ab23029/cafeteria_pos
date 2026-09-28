@@ -8,14 +8,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.CaracteristicaDAO;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.CaracteristicaDAOInterface;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Caracteristica;
 
 @Named("caracteristicaBean")
 @ViewScoped
 public class CaracteristicaBean implements Serializable {
-
-    @Inject
-    private CaracteristicaDAO caracteristicaDAO;
+@Inject
+private CaracteristicaDAOInterface caracteristicaDAO;
 
     private Caracteristica registro;
     private List<Caracteristica> lista;
@@ -23,15 +23,15 @@ public class CaracteristicaBean implements Serializable {
     @PostConstruct
     public void init() {
         this.registro = new Caracteristica();
-        this.lista = caracteristicaDAO.obtenerTodos();
+        this.lista = caracteristicaDAO.findRange(0, 100);
     }
 
     public void guardar() {
         if (this.registro.getIdCaracteristica() == null) {
             this.registro.setIdCaracteristica(UUID.randomUUID());
-            caracteristicaDAO.crear(this.registro);
+            caracteristicaDAO.create(this.registro);
         } else {
-            caracteristicaDAO.modificar(this.registro);
+            caracteristicaDAO.edit(this.registro);
         }
         this.init();
     }

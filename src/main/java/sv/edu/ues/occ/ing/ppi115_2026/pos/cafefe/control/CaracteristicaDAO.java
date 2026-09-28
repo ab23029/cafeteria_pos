@@ -3,24 +3,21 @@ package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.List;
+import java.io.Serializable;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Caracteristica;
 
 @Stateless
-public class CaracteristicaDAO {
+public class CaracteristicaDAO extends DefaultDAO<Caracteristica> implements CaracteristicaDAOInterface, Serializable {
 
     @PersistenceContext(unitName = "cafefePU")
     private EntityManager em;
 
-    public void crear(Caracteristica entity) {
-        em.persist(entity);
+    public CaracteristicaDAO() {
+        super(Caracteristica.class);
     }
 
-    public void modificar(Caracteristica entity) {
-        em.merge(entity);
-    }
-
-    public List<Caracteristica> obtenerTodos() {
-        return em.createQuery("SELECT c FROM Caracteristica c", Caracteristica.class).getResultList();
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
     }
 }

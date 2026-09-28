@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/plantillas/general.xhtml">
+
+    <ui:define name="titulo">Asignación de Roles</ui:define>
+    <ui:define name="header_titulo">Asignación de Roles a Empleados</ui:define>
+
+    <ui:define name="contenido">
+        <h:form id="frmEmpleadoRol">
+            <p:card style="max-width: 900px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 4px solid #8b5cf6;">
+                <f:facet name="title">
+                    <i class="pi pi-user-edit" style="color: #8b5cf6; margin-right: 10px;"></i>Gestor Interactivo de Permisos
+                </f:facet>
+
+                <div style="display: flex; flex-direction: column; gap: 25px; margin-top: 15px;">
+                    
+                    <!-- PASO 1: SELECCIONAR EMPLEADO -->
+                    <div style="background-color: #f8fafc; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <p:outputLabel value="1. Seleccione el Empleado:" for="cmbEmpleado" style="font-weight: 700; color: #334155; display: block; margin-bottom: 8px;"/>
+                        <p:selectOneMenu id="cmbEmpleado" value="#{empleadoRolFrm.idEmpleadoSeleccionado}" style="width: 100%; max-width: 450px;">
+                            <f:selectItem itemLabel="-- Seleccione un empleado --" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{empleadoRolFrm.listaEmpleados}" var="emp" itemLabel="#{emp.nombre} #{emp.apellido}" itemValue="#{emp.idEmpleado}"/>
+                            <p:ajax listener="#{empleadoRolFrm.cargarRolesDelEmpleado()}" update="pnlPickList btnGuardar" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- PASO 2: PICKLIST (TRANSFERIR ROLES) -->
+                    <h:panelGroup id="pnlPickList" layout="block">
+                        <p:outputLabel value="2. Gestione los Roles Asignados:" style="font-weight: 700; color: #334155; display: block; margin-bottom: 12px;"/>
+                        
+                        <p:pickList value="#{empleadoRolFrm.rolesPickList}" var="rol" itemLabel="#{rol}" itemValue="#{rol}"
+                                    showSourceControls="false" showTargetControls="false" responsive="true">
+                            <f:facet name="sourceCaption">Roles Disponibles</f:facet>
+                            <f:facet name="targetCaption">Roles Asignados</f:facet>
+                        </p:pickList>
+                    </h:panelGroup>
+
+                    <!-- PASO 3: BOTÓN DE GUARDADO -->
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+                        <p:commandButton id="btnGuardar" 
+                                         value="Guardar Cambios" 
+                                         actionListener="#{empleadoRolFrm.guardarCambios()}" 
+                                         update=":messages pnlPickList" 
+                                         icon="pi pi-check-circle" 
+                                         styleClass="ui-button-help" 
+                                         disabled="#{empleadoRolFrm.idEmpleadoSeleccionado == null}" />
+                    </div>
+
+                </div>
+            </p:card>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Mantenimiento de Descuentos - Cafefe POS</title>
+    </h:head>
+    <h:body>
+        <p:growl id="messages" showDetail="true" />
+
+        <h:form id="frmDescuento">
+            <p:panel header="Gestión de Descuentos">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel for="cboTipo" value="Tipo de Descuento: *" />
+                    <p:selectOneMenu id="cboTipo" value="#{descuentoFrm.idTipoDescuentoSeleccionado}" required="true">
+                        <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{descuentoFrm.listaTiposDescuento}" 
+                                       var="td" 
+                                       itemLabel="#{td.nombre}" 
+                                       itemValue="#{td.idTipoDescuento}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="nombre" value="Nombre del Descuento: *" />
+                    <p:inputText id="nombre" value="#{descuentoFrm.registro.nombre}" required="true" />
+
+                    <p:outputLabel for="fechaDesde" value="Fecha Desde:" />
+                    <p:datePicker id="fechaDesde" value="#{descuentoFrm.registro.fechaDesde}" showTime="true" />
+
+                    <p:outputLabel for="fechaHasta" value="Fecha Hasta:" />
+                    <p:datePicker id="fechaHasta" value="#{descuentoFrm.registro.fechaHasta}" showTime="true" />
+
+                    <p:outputLabel for="obs" value="Observaciones:" />
+                    <p:inputTextarea id="obs" value="#{descuentoFrm.registro.observaciones}" rows="3" cols="25" />
+                </h:panelGrid>
+
+                <br/>
+                <p:commandButton value="Guardar Descuento" 
+                                 actionListener="#{descuentoFrm.btnGuardarHandler()}" 
+                                 update="frmDescuento :messages" 
+                                 icon="pi pi-save" />
+
+                <br/><br/>
+
+                <p:dataTable id="dtDescuentos" value="#{descuentoFrm.listaRegistros}" var="d" emptyMessage="No hay descuentos registrados.">
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{d.nombre}" />
+                    </p:column>
+                    <p:column headerText="Tipo Descuento">
+                        <h:outputText value="#{d.idTipoDescuento.nombre}" />
+                    </p:column>
+                    <p:column headerText="Desde">
+                        <h:outputText value="#{d.fechaDesde}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Hasta">
+                        <h:outputText value="#{d.fechaHasta}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Observaciones">
+                        <h:outputText value="#{d.observaciones}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>

@@ -23,7 +23,7 @@ public class CajaBean implements Serializable {
 
     public void guardar() {
         if (registro != null) {
-            dao.create(registro);
+            dao.crear(registro);
             registro = new Caja();
         }
     }

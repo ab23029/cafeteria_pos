@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity;
 
 import jakarta.persistence.Basic;
@@ -10,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -20,14 +15,9 @@ import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.UUID;
-import java.util.UUID;
 import java.util.Date;
+import java.util.UUID;
 
-/**
- *
- * @author brandon
- */
 @Entity
 @Table(name = "descuento_producto")
 @NamedQueries({
@@ -38,27 +28,33 @@ import java.util.Date;
     @NamedQuery(name = "DescuentoProducto.findByObservaciones", query = "SELECT d FROM DescuentoProducto d WHERE d.observaciones = :observaciones")})
 public class DescuentoProducto implements Serializable {
 
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
-    private String observaciones;
-
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_descuento_producto")
     private UUID idDescuentoProducto;
+
     @Column(name = "fecha_desde")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDesde;
+
     @Column(name = "fecha_hasta")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHasta;
+
     @Column(name = "valor")
     private Integer valor;
+
+    @Size(max = 2147483647)
+    @Column(name = "observaciones")
+    private String observaciones;
+
     @JoinColumn(name = "id_descuento", referencedColumnName = "id_descuento")
     @ManyToOne(fetch = FetchType.LAZY)
     private Descuento idDescuento;
+
     @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")
     @ManyToOne(fetch = FetchType.LAZY)
     private Producto idProducto;
@@ -102,6 +98,13 @@ public class DescuentoProducto implements Serializable {
         this.valor = valor;
     }
 
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
 
     public Descuento getIdDescuento() {
         return idDescuento;
@@ -128,7 +131,6 @@ public class DescuentoProducto implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof DescuentoProducto)) {
             return false;
         }
@@ -143,13 +145,4 @@ public class DescuentoProducto implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.DescuentoProducto[ idDescuentoProducto=" + idDescuentoProducto + " ]";
     }
-
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
-    }
-    
 }

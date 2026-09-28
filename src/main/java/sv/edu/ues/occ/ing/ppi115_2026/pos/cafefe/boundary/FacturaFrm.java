@@ -15,14 +15,15 @@ import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.FacturaDAO;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.FacturaDAOInterface;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Factura;
 
 @Named("facturaFrm")
 @ViewScoped
 public class FacturaFrm implements Serializable {
 
-    @Inject
-    private FacturaDAO facturaDAO;
+@Inject
+private FacturaDAOInterface facturaDAO;
 
     private Factura registroSeleccionado;
     private LazyDataModel<Factura> modelo;
@@ -43,7 +44,7 @@ public class FacturaFrm implements Serializable {
             public Factura getRowData(String rowKey) {
                 if (rowKey != null && !rowKey.trim().isEmpty()) {
                     try {
-                        return facturaDAO.buscarPorId(rowKey);
+                        return facturaDAO.find(rowKey);
                     } catch (Exception e) {
                         return null;
                     }
@@ -80,17 +81,17 @@ public class FacturaFrm implements Serializable {
 
             boolean existe = false;
             if (registroSeleccionado.getIdFactura() != null) {
-                Factura f = facturaDAO.buscarPorId(registroSeleccionado.getIdFactura().toString());
+                Factura f = facturaDAO.find(registroSeleccionado.getIdFactura().toString());
                 if (f != null) {
                     existe = true;
                 }
             }
 
             if (!existe) {
-                facturaDAO.crear(registroSeleccionado);
+                facturaDAO.create(registroSeleccionado);
                 mostrarMensaje(FacesMessage.SEVERITY_INFO, "Éxito", "Factura creada correctamente");
             } else {
-                facturaDAO.modificar(registroSeleccionado);
+                facturaDAO.edit(registroSeleccionado);
                 mostrarMensaje(FacesMessage.SEVERITY_INFO, "Éxito", "Factura modificada correctamente");
             }
             nuevoRegistro();
@@ -101,7 +102,7 @@ public class FacturaFrm implements Serializable {
 
     public void btnEliminarHandler() {
         try {
-            facturaDAO.eliminar(registroSeleccionado);
+            facturaDAO.remove(registroSeleccionado);
             mostrarMensaje(FacesMessage.SEVERITY_INFO, "Éxito", "Factura eliminada correctamente");
             nuevoRegistro();
         } catch (Exception e) {
