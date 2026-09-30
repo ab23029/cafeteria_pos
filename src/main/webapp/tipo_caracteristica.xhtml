@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>Gestión de Tipo de Característica - Cafefe POS</title>
-    </h:head>
-    <h:body>
-        <p:growl id="messages" showDetail="true" />
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/plantillas/general.xhtml">
 
+    <ui:define name="titulo">Gestión de Tipos de Característica - Cafefe POS</ui:define>
+    <ui:define name="header_titulo">Tipos de Característica</ui:define>
+
+    <ui:define name="contenido">
         <h:form id="frmTabla">
-            <p:panel header="Gestión de Tipo de Característica">
-                <!-- Botón para crear nuevo -->
+            <p:panel header="Gestión de Tipos de Característica">
                 <p:commandButton value="Nuevo Tipo Característica" 
-                                 actionListener="#{frmTipoCaracteristica.limpiar()}" 
+                                 actionListener="#{tipoCaracteristicaBean.limpiar()}" 
                                  update=":dialogNuevo" 
                                  oncomplete="PF('dlgNuevo').show()" 
                                  icon="pi pi-plus" />
 
-                <!-- Botón para volver a Tipo Descuento -->
                 <p:button value="Volver a Tipo Descuento" 
-                          outcome="TipoDescuento.xhtml" 
+                          outcome="TipoDescuento" 
                           icon="pi pi-arrow-left" 
                           styleClass="ui-button-secondary" 
                           style="margin-left: 10px;" />
@@ -29,7 +27,7 @@
                 <br/><br/>
 
                 <p:dataTable id="dtTipoCaracteristica" 
-                             value="#{frmTipoCaracteristica.tipoCaracteristicaDAO.findRange(0, 100)}" 
+                             value="#{tipoCaracteristicaBean.lista}" 
                              var="row" 
                              paginator="true" 
                              rows="10">
@@ -53,33 +51,46 @@
                     <p:column headerText="Observaciones">
                         <h:outputText value="#{row.observaciones}" />
                     </p:column>
+
+                    <p:column headerText="Acciones">
+                        <p:commandButton icon="pi pi-pencil" 
+                                         update=":dialogNuevo" 
+                                         oncomplete="PF('dlgNuevo').show()" 
+                                         process="@this">
+                            <f:setPropertyActionListener value="#{row}" target="#{tipoCaracteristicaBean.registro}" />
+                        </p:commandButton>
+                    </p:column>
                 </p:dataTable>
             </p:panel>
         </h:form>
 
-        <p:dialog header="Nuevo Tipo de Característica" widgetVar="dlgNuevo" id="dialogNuevo" modal="true" responsive="true">
+        <p:dialog header="Datos de Tipo de Característica" widgetVar="dlgNuevo" id="dialogNuevo" modal="true" responsive="true">
             <h:form id="frmNuevo">
                 <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel for="id" value="ID (Autogenerado):" />
+                    <p:inputText id="id" value="#{tipoCaracteristicaBean.registro.idTipoCaracteristica}" disabled="true" placeholder="UUID Automático" />
+
                     <p:outputLabel for="nombre" value="Nombre:" />
-                    <p:inputText id="nombre" value="#{frmTipoCaracteristica.registro.nombre}" required="true" />
+                    <p:inputText id="nombre" value="#{tipoCaracteristicaBean.registro.nombre}" required="true" />
 
                     <p:outputLabel for="expresion" value="Expresión Regular:" />
-                    <p:inputText id="expresion" value="#{frmTipoCaracteristica.registro.expresionRegular}" />
+                    <p:inputText id="expresion" value="#{tipoCaracteristicaBean.registro.expresionRegular}" placeholder="Ej: ^\d+$" />
 
                     <p:outputLabel for="activo" value="Activo:" />
-                    <p:selectBooleanCheckbox id="activo" value="#{frmTipoCaracteristica.registro.activo}" />
+                    <p:selectBooleanCheckbox id="activo" value="#{tipoCaracteristicaBean.registro.activo}" />
 
                     <p:outputLabel for="observaciones" value="Observaciones:" />
-                    <p:inputTextarea id="observaciones" value="#{frmTipoCaracteristica.registro.observaciones}" />
+                    <p:inputTextarea id="observaciones" value="#{tipoCaracteristicaBean.registro.observaciones}" rows="3" cols="30" />
                 </h:panelGrid>
 
                 <br/>
                 <p:commandButton value="Guardar" 
-                                 actionListener="#{frmTipoCaracteristica.btnCrearHandler()}" 
+                                 actionListener="#{tipoCaracteristicaBean.guardar()}" 
                                  update=":frmTabla:dtTipoCaracteristica :messages" 
                                  oncomplete="if (!args.validationFailed) PF('dlgNuevo').hide()" 
                                  icon="pi pi-check" />
             </h:form>
         </p:dialog>
-    </h:body>
-</html>
+    </ui:define>
+
+</ui:composition>
