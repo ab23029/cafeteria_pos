@@ -5,6 +5,7 @@
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -49,8 +50,9 @@ public class TipoProducto implements Serializable {
     private UUID idTipoProducto;
     @Column(name = "activo")
     private Boolean activo;
-    @OneToMany(mappedBy = "idTipoProducto", fetch = FetchType.LAZY)
-    private List<ProductoTipoProducto> productoTipoProductoList;
+    
+@OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipoProducto")
+private List<ProductoTipoProducto> productoTipoProductoList;
 
     public TipoProducto() {
     }

@@ -38,8 +38,9 @@ public class Producto implements Serializable {
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "precio_sugerido", nullable = false)
-    private BigDecimal precioSugerido;
+ @NotNull
+@Column(name = "precio_sugerido", nullable = false, precision = 8, scale = 2)
+private BigDecimal precioSugerido;
 
     @Column(name = "activo")
     private Boolean activo;
@@ -57,8 +58,8 @@ public class Producto implements Serializable {
     @OneToMany(mappedBy = "idProducto", fetch = FetchType.LAZY)
     private List<DescuentoProducto> descuentoProductoList;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto", fetch = FetchType.LAZY)
-    private List<ProductoTipoProducto> productoTipoProductoList;
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProducto")
+private List<ProductoTipoProducto> productoTipoProductoList;
 
     public Producto() {
     }
@@ -83,13 +84,13 @@ public class Producto implements Serializable {
         this.nombre = nombre;
     }
 
-    public BigDecimal getPrecioSugerido() {
-        return precioSugerido;
-    }
+   public BigDecimal getPrecioSugerido() {
+    return precioSugerido;
+}
 
-    public void setPrecioSugerido(BigDecimal precioSugerido) {
-        this.precioSugerido = precioSugerido;
-    }
+public void setPrecioSugerido(BigDecimal precioSugerido) {
+    this.precioSugerido = precioSugerido;
+}
 
     public Boolean getActivo() {
         return activo;

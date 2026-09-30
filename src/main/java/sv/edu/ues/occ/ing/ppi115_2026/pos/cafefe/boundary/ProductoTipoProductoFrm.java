@@ -1,5 +1,5 @@
-
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.boundary;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -15,7 +15,6 @@ import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.ProductoTipoProductoDAO
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.TipoProductoDAOInterface;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Producto;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.ProductoTipoProducto;
-import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.ProductoTipoProductoPK;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoProducto;
 
 @Named(value = "productoTipoProductoFrm")
@@ -65,43 +64,56 @@ public class ProductoTipoProductoFrm implements Serializable {
         }
     }
 
- public void guardar() {
-    try {
-        if (idProductoSeleccionado != null && idTipoProductoSeleccionado != null) {
-            Producto prod = productoDAO.find(idProductoSeleccionado);
-            TipoProducto tipo = tipoProductoDAO.find(idTipoProductoSeleccionado);
+    public void guardar() {
+        try {
+            if (idProductoSeleccionado != null && idTipoProductoSeleccionado != null) {
+                Producto prod = productoDAO.find(idProductoSeleccionado);
+                TipoProducto tipo = tipoProductoDAO.find(idTipoProductoSeleccionado);
 
-            // Asignar el Tipo de Producto
-            registroSeleccionado.setIdTipoProducto(tipo);
+                // Validación requerida por la rúbrica: No permitir asignar tipos inactivos
+                if (tipo == null || Boolean.FALSE.equals(tipo.getActivo())) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se puede asignar un Tipo de Producto deshabilitado/inactivo."));
+                    return;
+                }
 
-            if (registroSeleccionado.getProductoTipoProductoPK() == null) {
-                // Crear la llave primaria compuesta PK
-                UUID idGenerado = UUID.randomUUID();
-                ProductoTipoProductoPK pk = new ProductoTipoProductoPK(idGenerado, idProductoSeleccionado);
-                registroSeleccionado.setProductoTipoProductoPK(pk);
-                
-                // Relacionar el objeto producto
-                registroSeleccionado.setProducto(prod);
+                // Asignar entidades relacionadas
+                registroSeleccionado.setIdProducto(prod);
+                registroSeleccionado.setIdTipoProducto(tipo);
 
-                productoTipoProductoDAO.create(registroSeleccionado);
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignación realizada correctamente"));
+                if (registroSeleccionado.getIdProductoTipoProducto() == null) {
+                    // Generar la llave primaria de la entidad
+                    registroSeleccionado.setIdProductoTipoProducto(UUID.randomUUID());
+
+                    productoTipoProductoDAO.create(registroSeleccionado);
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignación realizada correctamente"));
+                } else {
+                    productoTipoProductoDAO.edit(registroSeleccionado);
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignación actualizada"));
+                }
+                nuevoRegistro();
+                cargarDatos();
             } else {
-                productoTipoProductoDAO.edit(registroSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asignación actualizada"));
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atención", "Debe seleccionar un Producto y un Tipo"));
             }
-            nuevoRegistro();
-            cargarDatos();
-        } else {
+        } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Atención", "Debe seleccionar un Producto y un Tipo"));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al guardar la asignación: " + e.getMessage()));
         }
-    } catch (Exception e) {
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al guardar la asignación"));
     }
-}
+
+    // Método para seleccionar un registro existente de la tabla (Edición)
+    public void seleccionarRegistro(ProductoTipoProducto ptp) {
+        if (ptp != null) {
+            this.registroSeleccionado = ptp;
+            this.idProductoSeleccionado = ptp.getIdProducto() != null ? ptp.getIdProducto().getIdProducto() : null;
+            this.idTipoProductoSeleccionado = ptp.getIdTipoProducto() != null ? ptp.getIdTipoProducto().getIdTipoProducto() : null;
+        }
+    }
+
     // Getters y Setters
     public List<ProductoTipoProducto> getListaProductoTipoProducto() { return listaProductoTipoProducto; }
     public List<Producto> getListaProductos() { return listaProductos; }
