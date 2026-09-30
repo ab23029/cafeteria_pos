@@ -1,11 +1,9 @@
-
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -14,37 +12,36 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.UUID;
 
-/**
- *
- * @author brandon
- */
 @Entity
 @Table(name = "tipo_descuento")
 @NamedQueries({
     @NamedQuery(name = "TipoDescuento.findAll", query = "SELECT t FROM TipoDescuento t"),
-    @NamedQuery(name = "TipoDescuento.findByNombre", query = "SELECT t FROM TipoDescuento t WHERE t.nombre = :nombre"),
-    @NamedQuery(name = "TipoDescuento.findByActivo", query = "SELECT t FROM TipoDescuento t WHERE t.activo = :activo"),
-    @NamedQuery(name = "TipoDescuento.findByDescuentoMaximo", query = "SELECT t FROM TipoDescuento t WHERE t.descuentoMaximo = :descuentoMaximo"),
-    @NamedQuery(name = "TipoDescuento.findByObservaciones", query = "SELECT t FROM TipoDescuento t WHERE t.observaciones = :observaciones")})
+    @NamedQuery(name = "TipoDescuento.findActivos", query = "SELECT t FROM TipoDescuento t WHERE t.activo = true"),
+    @NamedQuery(name = "TipoDescuento.findByNombre", query = "SELECT t FROM TipoDescuento t WHERE t.nombre = :nombre")
+})
 public class TipoDescuento implements Serializable {
 
-    @Size(max = 2147483647)
-    @Column(name = "nombre")
-    private String nombre;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
-    private String observaciones;
-
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_tipo_descuento")
     private UUID idTipoDescuento;
+
+    @Size(max = 2147483647)
+    @Column(name = "nombre")
+    private String nombre;
+
     @Column(name = "activo")
     private Boolean activo;
+
     @Column(name = "descuento_maximo")
     private Integer descuentoMaximo;
+
+    @Size(max = 2147483647)
+    @Column(name = "observaciones")
+    private String observaciones;
 
     public TipoDescuento() {
     }
@@ -61,6 +58,13 @@ public class TipoDescuento implements Serializable {
         this.idTipoDescuento = idTipoDescuento;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
     public Boolean getActivo() {
         return activo;
@@ -78,6 +82,13 @@ public class TipoDescuento implements Serializable {
         this.descuentoMaximo = descuentoMaximo;
     }
 
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
 
     @Override
     public int hashCode() {
@@ -88,7 +99,6 @@ public class TipoDescuento implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof TipoDescuento)) {
             return false;
         }
@@ -103,25 +113,4 @@ public class TipoDescuento implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoDescuento[ idTipoDescuento=" + idTipoDescuento + " ]";
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
-    }
-
-    public void setIdDescuento(UUID randomUUID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-   
 }

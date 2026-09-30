@@ -43,14 +43,19 @@ public class DescuentoFrm implements Serializable {
         this.registro = new Descuento();
         this.idTipoDescuentoSeleccionado = null;
     }
-
-    public void cargarDatos() {
+public void cargarDatos() {
         try {
             if (descuentoDAO != null) {
                 this.listaRegistros = descuentoDAO.findRange(0, 100);
             }
             if (tipoDescuentoDAO != null) {
-                this.listaTiposDescuento = tipoDescuentoDAO.findRange(0, 100);
+                // Filtramos únicamente los tipos activos de la lista cargada
+                List<TipoDescuento> todos = tipoDescuentoDAO.findRange(0, 100);
+                if (todos != null) {
+                    this.listaTiposDescuento = todos.stream()
+                            .filter(t -> Boolean.TRUE.equals(t.getActivo()))
+                            .toList();
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al cargar datos", ex);
@@ -60,7 +65,12 @@ public class DescuentoFrm implements Serializable {
     public void btnGuardarHandler() {
         try {
             if (registro != null && idTipoDescuentoSeleccionado != null) {
-                TipoDescuento td = tipoDescuentoDAO.find(idTipoDescuentoSeleccionado);
+                // Buscamos el tipo seleccionado dentro de la lista de activos
+                TipoDescuento td = listaTiposDescuento.stream()
+                        .filter(t -> idTipoDescuentoSeleccionado.equals(t.getIdTipoDescuento()))
+                        .findFirst()
+                        .orElse(null);
+
                 if (td != null) {
                     if (registro.getIdDescuento() == null) {
                         registro.setIdDescuento(UUID.randomUUID());
@@ -74,7 +84,7 @@ public class DescuentoFrm implements Serializable {
                     cargarDatos();
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se encontró el Tipo de Descuento seleccionado"));
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El Tipo de Descuento seleccionado no es válido"));
                 }
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -87,10 +97,9 @@ public class DescuentoFrm implements Serializable {
         }
     }
 
-    // Getters y Setters
     public Descuento getRegistro() { return registro; }
     public void setRegistro(Descuento registro) { this.registro = registro; }
-    
+
     public List<Descuento> getListaRegistros() { return listaRegistros; }
     public void setListaRegistros(List<Descuento> listaRegistros) { this.listaRegistros = listaRegistros; }
 

@@ -1,6 +1,8 @@
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.beans;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -17,6 +19,8 @@ import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoDescuento;
 @ViewScoped
 public class TipoDescuentoFrm implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Inject
     private TipoDescuentoDAOInterface tipoDescuentoDAO;
 
@@ -25,8 +29,8 @@ public class TipoDescuentoFrm implements Serializable {
 
     @PostConstruct
     public void init() {
+        btnNuevoHandler();
         cargarRegistros();
-        this.registroSeleccionado = new TipoDescuento();
     }
 
     public void cargarRegistros() {
@@ -39,17 +43,15 @@ public class TipoDescuentoFrm implements Serializable {
         }
     }
 
-    // Sobrecarga para actionListener="#{tipoDescuentoFrm.btnNuevoHandler}"
     public void btnNuevoHandler(ActionEvent ae) {
         btnNuevoHandler();
     }
 
-    // Método para invocaciones directas
     public void btnNuevoHandler() {
         this.registroSeleccionado = new TipoDescuento();
+        this.registroSeleccionado.setActivo(true);
     }
 
-    // Sobrecarga para actionListener="#{tipoDescuentoFrm.btnGuardarHandler}"
     public void btnGuardarHandler(ActionEvent ae) {
         guardar();
     }
@@ -65,11 +67,17 @@ public class TipoDescuentoFrm implements Serializable {
                     this.registroSeleccionado.setIdTipoDescuento(UUID.randomUUID());
                 }
                 tipoDescuentoDAO.create(this.registroSeleccionado);
-                this.registroSeleccionado = new TipoDescuento();
+                
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Tipo de descuento guardado correctamente"));
+
+                btnNuevoHandler();
                 cargarRegistros();
             }
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al guardar", ex);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo guardar el tipo de descuento"));
         }
     }
 

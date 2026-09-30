@@ -11,10 +11,11 @@
     </ui:define>
 
     <ui:define name="header_titulo">
-        Gestión de Tipo de Descuento
+        Gestión de Tipos de Descuento
     </ui:define>
 
     <ui:define name="contenido">
+
         <h:form id="frmAcciones">
             <p:toolbar style="margin-bottom: 10px;">
                 <p:toolbarGroup>
@@ -28,21 +29,24 @@
         </h:form>
 
         <h:form id="frmTabla">
-            <p:growl id="messagesTable" showDetail="true" />
             <p:dataTable id="tblTipoDescuento" 
                          value="#{tipoDescuentoFrm.registros}" 
                          var="item" 
                          paginator="true" 
                          rows="10" 
                          emptyMessage="No se encontraron registros">
+                
+                <p:column headerText="ID">
+                    <h:outputText value="#{item.idTipoDescuento}" />
+                </p:column>
                 <p:column headerText="Nombre">
                     <h:outputText value="#{item.nombre}" />
                 </p:column>
                 <p:column headerText="Descuento Máximo (%)">
-                    <h:outputText value="#{item.descuentoMaximo}" />
+                    <h:outputText value="#{item.descuentoMaximo}%" />
                 </p:column>
                 <p:column headerText="Estado">
-                    <h:outputText value="#{item.activo ? 'Activo' : 'Inactivo'}" />
+                    <h:outputText value="#{item.activo ? 'ACTIVO' : 'INACTIVO'}" />
                 </p:column>
                 <p:column headerText="Observaciones">
                     <h:outputText value="#{item.observaciones}" />
@@ -57,9 +61,9 @@
                     <p:inputText id="txtNombre" value="#{tipoDescuentoFrm.registroSeleccionado.nombre}" required="true" />
 
                     <p:outputLabel value="Descuento Máximo (%):" for="txtMaximo" />
-                    <p:spinner id="txtMaximo" value="#{tipoDescuentoFrm.registroSeleccionado.descuentoMaximo}" min="0" max="100" />
+                    <p:spinner id="txtMaximo" value="#{tipoDescuentoFrm.registroSeleccionado.descuentoMaximo}" min="1" max="100" required="true" />
 
-                    <p:outputLabel value="Estado:" for="chkActivo" />
+                    <p:outputLabel value="Activo:" for="chkActivo" />
                     <p:selectBooleanCheckbox id="chkActivo" value="#{tipoDescuentoFrm.registroSeleccionado.activo}" />
 
                     <p:outputLabel value="Observaciones:" for="txtObs" />
@@ -69,7 +73,7 @@
                 <div style="text-align: right; margin-top: 10px;">
                     <p:commandButton value="Guardar" 
                                      actionListener="#{tipoDescuentoFrm.btnGuardarHandler()}" 
-                                     update=":frmTabla:tblTipoDescuento :messages :frmNuevo" 
+                                     update=":frmTabla:tblTipoDescuento :frmNuevo" 
                                      oncomplete="if (!args.validationFailed) PF('dlgNuevo').hide()" 
                                      icon="pi pi-check" />
                 </div>
