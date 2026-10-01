@@ -46,15 +46,21 @@ public class RolFrm implements Serializable {
 
     public void guardar() {
         try {
+            if (registroSeleccionado.getNombre() == null || registroSeleccionado.getNombre().trim().isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atención", "El nombre del rol es obligatorio"));
+                return;
+            }
+
             if (registroSeleccionado.getIdRol() == null) {
                 registroSeleccionado.setIdRol(UUID.randomUUID());
                 rolDAO.create(registroSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol registrado"));
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol registrado correctamente"));
             } else {
                 rolDAO.edit(registroSeleccionado);
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol actualizado"));
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Rol actualizado correctamente"));
             }
             nuevoRegistro();
             cargarDatos();

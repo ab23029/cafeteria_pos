@@ -46,6 +46,14 @@ public class EmpleadoFrm implements Serializable {
 
     public void guardar() {
         try {
+            // Validaciones básicas de campos obligatorios
+            if (registroSeleccionado.getNombre() == null || registroSeleccionado.getNombre().trim().isEmpty() ||
+                registroSeleccionado.getApellido() == null || registroSeleccionado.getApellido().trim().isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atención", "El nombre y el apellido son obligatorios"));
+                return;
+            }
+
             if (registroSeleccionado.getIdEmpleado() == null) {
                 registroSeleccionado.setIdEmpleado(UUID.randomUUID());
                 empleadoDAO.create(registroSeleccionado);

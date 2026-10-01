@@ -17,22 +17,24 @@
                 </f:facet>
 
                 <div style="display: flex; flex-direction: column; gap: 25px; margin-top: 15px;">
-                    
+
                     <!-- PASO 1: SELECCIONAR EMPLEADO -->
                     <div style="background-color: #f8fafc; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
                         <p:outputLabel value="1. Seleccione el Empleado:" for="cmbEmpleado" style="font-weight: 700; color: #334155; display: block; margin-bottom: 8px;"/>
                         <p:selectOneMenu id="cmbEmpleado" value="#{empleadoRolFrm.idEmpleadoSeleccionado}" style="width: 100%; max-width: 450px;">
                             <f:selectItem itemLabel="-- Seleccione un empleado --" itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{empleadoRolFrm.listaEmpleados}" var="emp" itemLabel="#{emp.nombre} #{emp.apellido}" itemValue="#{emp.idEmpleado}"/>
-                            <p:ajax listener="#{empleadoRolFrm.cargarRolesDelEmpleado()}" update="pnlPickList btnGuardar" />
+                            <p:ajax listener="#{empleadoRolFrm.cargarRolesDelEmpleado}" update="pnlPickList btnGuardar" />
                         </p:selectOneMenu>
                     </div>
 
                     <!-- PASO 2: PICKLIST (TRANSFERIR ROLES) -->
                     <h:panelGroup id="pnlPickList" layout="block">
                         <p:outputLabel value="2. Gestione los Roles Asignados:" style="font-weight: 700; color: #334155; display: block; margin-bottom: 12px;"/>
-                        
-                        <p:pickList value="#{empleadoRolFrm.rolesPickList}" var="rol" itemLabel="#{rol}" itemValue="#{rol}"
+
+                        <p:pickList value="#{empleadoRolFrm.rolesPickList}" var="rol" 
+                                    itemLabel="#{rol}" itemValue="#{rol}"
+                                    itemDisabled="#{rol.contains('(Inactivo)')}"
                                     showSourceControls="false" showTargetControls="false" responsive="true">
                             <f:facet name="sourceCaption">Roles Disponibles</f:facet>
                             <f:facet name="targetCaption">Roles Asignados</f:facet>
@@ -44,7 +46,7 @@
                         <p:commandButton id="btnGuardar" 
                                          value="Guardar Cambios" 
                                          actionListener="#{empleadoRolFrm.guardarCambios()}" 
-                                         update=":messages pnlPickList" 
+                                         update=":messages pnlPickList "
                                          icon="pi pi-check-circle" 
                                          styleClass="ui-button-help" 
                                          disabled="#{empleadoRolFrm.idEmpleadoSeleccionado == null}" />
