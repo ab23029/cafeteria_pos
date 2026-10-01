@@ -7,34 +7,34 @@
                 template="/WEB-INF/plantillas/general.xhtml">
 
     <ui:define name="titulo">Gestión de Productos</ui:define>
-    <ui:define name="header_titulo">Administración de Productos</ui:define>
 
     <ui:define name="contenido">
         <h:form id="frmProducto">
-            <p:panel header="Formulario de Producto">
-                <h:panelGrid columns="2">
-                    <p:outputLabel for="nombre" value="Nombre:" />
-                    <p:inputText id="nombre" value="#{productoBean.registro.nombre}" required="true" />
+            <p:messages id="messages" showDetail="true" closable="true" />
 
-                    <p:outputLabel for="precioSugerido" value="Precio Sugerido:" />
+            <p:panel header="Formulario de Creación de Producto">
+                <h:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" styleClass="ui-panelgrid-blank" style="width: 100%; margin-bottom: 15px;">
+                    <p:outputLabel for="nombre" value="Nombre del Producto:" style="font-weight: bold;" />
+                    <p:inputText id="nombre" value="#{productoFrm.registroSeleccionado.nombre}" required="true" style="width: 100%;" />
+
+                    <p:outputLabel for="precioSugerido" value="Precio Sugerido:" style="font-weight: bold;" />
                     <p:inputNumber id="precioSugerido" 
-                                   value="#{productoBean.registro.precioSugerido}" 
-                                   symbol="$ " 
-                                   decimalPlaces="2" 
-                                   minValue="0" 
-                                   required="true" />
+                                   value="#{productoFrm.registroSeleccionado.precioSugerido}" 
+                                   symbol="$ " decimalPlaces="2" minValue="0" required="true" style="width: 100%;" />
+
+                    <p:outputLabel for="activo" value="Activo:" style="font-weight: bold;" />
+                    <p:selectBooleanCheckbox id="activo" value="#{productoFrm.registroSeleccionado.activo}" />
                 </h:panelGrid>
-                
-                <p:commandButton value="Guardar" actionListener="#{productoBean.guardar()}" 
-                                 update="frmProducto :messages" icon="pi pi-save" />
+
+                <f:facet name="footer">
+                    <p:commandButton value="Guardar Producto" actionListener="#{productoFrm.guardar()}" 
+                                     update="frmProducto" icon="pi pi-save" styleClass="ui-button-primary" />
+                </f:facet>
             </p:panel>
 
             <p:spacer height="20" />
 
-            <p:dataTable value="#{productoBean.lista}" var="p" id="tblProducto" paginator="true" rows="10">
-                <p:column headerText="ID">
-                    <h:outputText value="#{p.idProducto}" />
-                </p:column>
+            <p:dataTable value="#{productoFrm.listaProductos}" var="p" id="tblProducto" paginator="true" rows="10" emptyMessage="No se encontraron registros de productos.">
                 <p:column headerText="Nombre">
                     <h:outputText value="#{p.nombre}" />
                 </p:column>
@@ -43,8 +43,10 @@
                         <f:convertNumber type="currency" currencySymbol="$" />
                     </h:outputText>
                 </p:column>
+                <p:column headerText="Estado">
+                    <h:outputText value="#{p.activo ? 'Activo' : 'Inactivo'}" />
+                </p:column>
             </p:dataTable>
         </h:form>
     </ui:define>
-
 </ui:composition>

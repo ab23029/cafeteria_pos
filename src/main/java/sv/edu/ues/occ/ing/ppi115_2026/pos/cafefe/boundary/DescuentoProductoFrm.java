@@ -64,26 +64,48 @@ public class DescuentoProductoFrm implements Serializable {
 
     public void guardar() {
         try {
-            if (registroSeleccionado != null && idDescuentoSeleccionado != null && idProductoSeleccionado != null) {
-                Descuento desc = descuentoDAO.find(idDescuentoSeleccionado);
-                Producto prod = productoDAO.find(idProductoSeleccionado);
-
-                registroSeleccionado.setIdDescuento(desc);
-                registroSeleccionado.setIdProducto(prod);
-
-                if (registroSeleccionado.getIdDescuentoProducto() == null) {
-                    registroSeleccionado.setIdDescuentoProducto(UUID.randomUUID());
-                    descuentoProductoDAO.create(registroSeleccionado);
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asociación Descuento-Producto creada correctamente"));
-                } else {
-                    descuentoProductoDAO.edit(registroSeleccionado);
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro actualizado correctamente"));
-                }
-                nuevoRegistro();
-                cargarDatos();
+            if (registroSeleccionado == null || idDescuentoSeleccionado == null || idProductoSeleccionado == null) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Debe seleccionar un Producto y un Descuento"));
+                return;
             }
+
+            // Validación de límites de Porcentaje / Valor
+            if (registroSeleccionado.getValor() != null) {
+                if (registroSeleccionado.getValor().doubleValue() < 0 || registroSeleccionado.getValor().doubleValue() > 100) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error de Validación", "El porcentaje de descuento debe estar entre 0% y 100%"));
+                    return;
+                }
+            }
+
+            // Validación de Fechas utilizando .before() para java.util.Date
+            if (registroSeleccionado.getFechaDesde() != null && registroSeleccionado.getFechaHasta() != null) {
+                if (registroSeleccionado.getFechaHasta().before(registroSeleccionado.getFechaDesde())) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error de Validación", "La Fecha Hasta no puede ser anterior a la Fecha Desde"));
+                    return;
+                }
+            }
+
+            Descuento desc = descuentoDAO.find(idDescuentoSeleccionado);
+            Producto prod = productoDAO.find(idProductoSeleccionado);
+
+            registroSeleccionado.setIdDescuento(desc);
+            registroSeleccionado.setIdProducto(prod);
+
+            if (registroSeleccionado.getIdDescuentoProducto() == null) {
+                registroSeleccionado.setIdDescuentoProducto(UUID.randomUUID());
+                descuentoProductoDAO.create(registroSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Asociación Descuento-Producto creada correctamente"));
+            } else {
+                descuentoProductoDAO.edit(registroSeleccionado);
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro actualizado correctamente"));
+            }
+            nuevoRegistro();
+            cargarDatos();
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al guardar los datos"));

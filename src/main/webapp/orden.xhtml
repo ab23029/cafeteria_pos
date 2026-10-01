@@ -1,39 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/plantillas/general.xhtml">
 
     <ui:define name="titulo">Gestión de Órdenes</ui:define>
-    <ui:define name="header_titulo">Administración de Órdenes</ui:define>
 
     <ui:define name="contenido">
         <h:form id="frmOrden">
+            <p:messages id="messages" showDetail="true" closable="true" />
+
             <p:panel header="Formulario de Orden">
                 <h:panelGrid columns="2" cellpadding="5">
-                    <p:outputLabel for="idOrden" value="ID Orden:" />
-                    <p:inputText id="idOrden" value="#{ordenFrm.registroSeleccionado.idOrden}" readonly="true" />
+                    <p:outputLabel for="empRol" value="Empleado (Camarero):" />
+                    <p:selectOneMenu id="empRol" value="#{ordenFrm.registroSeleccionado.idEmpleadoRol}" converter="entityConverter" required="true">
+                        <f:selectItem itemLabel="-- Seleccione Camarero --" itemValue="#{null}" />
+                        <f:selectItems value="#{ordenFrm.listaCamareros}" var="er" 
+                                       itemLabel="#{er.idEmpleado.nombre} - #{er.idRol.nombre}" itemValue="#{er}" />
+                    </p:selectOneMenu>
 
-                    <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
-                    <p:datePicker id="fechaCreacion" value="#{ordenFrm.registroSeleccionado.fechaCreacion}" showTime="true" />
+                    <p:outputLabel for="fechaCreacion" value="Fecha Orden:" />
+                    <p:datePicker id="fechaCreacion" value="#{ordenFrm.registroSeleccionado.fechaCreacion}" showTime="true" required="true" />
                 </h:panelGrid>
-                
-                <p:commandButton value="Guardar" actionListener="#{ordenFrm.btnGuardarHandler()}" 
-                                 update="frmOrden :messages" icon="pi pi-save" />
+
+                <p:separator/>
+
+                <!-- Sección para agregar productos a la Orden -->
+                <p:panel header="Agregar Producto a la Orden" style="margin-bottom: 10px;">
+                    <h:panelGrid columns="4" cellpadding="5">
+                        <p:outputLabel for="cboProd" value="Producto:" />
+                        <p:selectOneMenu id="cboProd" value="#{ordenFrm.productoSeleccionado}" converter="entityConverter">
+                            <f:selectItem itemLabel="-- Seleccione Producto --" itemValue="#{null}" />
+                            <f:selectItems value="#{ordenFrm.listaProductos}" var="p" itemLabel="#{p.nombre} ($#{p.precioSugerido})" itemValue="#{p}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="obsItem" value="Observaciones:" />
+                        <p:inputText id="obsItem" value="#{ordenFrm.observacionItem}" />
+                    </h:panelGrid>
+                    <p:commandButton value="Agregar Producto" actionListener="#{ordenFrm.agregarProducto()}" 
+                                     update="tblDetalle cboProd obsItem messages" icon="pi pi-plus" styleClass="ui-button-info" />
+                </p:panel>
+
+                <!-- Botones de evaluación -->
+                <h:panelGrid columns="3" cellpadding="5">
+                    <p:commandButton value="Aplicar Descuento por Fechas" 
+                                     actionListener="#{ordenFrm.aplicarDescuentosPorFecha()}" 
+                                     update="tblDetalle :frmOrden:messages" styleClass="ui-button-warning" />
+
+                    <p:commandButton value="Aplicar Descuento Abierto" 
+                                     actionListener="#{ordenFrm.aplicarDescuentoAbierto()}" 
+                                     update="tblDetalle :frmOrden:messages" styleClass="ui-button-help" />
+
+                    <p:commandButton value="Guardar Orden" 
+                                     actionListener="#{ordenFrm.btnGuardarHandler()}" 
+                                     update="frmOrden" icon="pi pi-save" styleClass="ui-button-success" />
+                </h:panelGrid>
             </p:panel>
 
-            <p:spacer height="20" />
+            <p:spacer height="15" />
 
-            <p:dataTable value="#{ordenFrm.registros}" var="o" id="tblOrden" paginator="true" rows="10">
-                <p:column headerText="ID Orden">
-                    <h:outputText value="#{o.idOrden}" />
+            <!-- Tabla de detalle -->
+            <p:dataTable value="#{ordenFrm.itemsOrden}" var="item" id="tblDetalle" emptyMessage="No hay productos agregados a esta orden.">
+                <p:column headerText="Producto">
+                    <h:outputText value="#{item.idProducto.nombre}" />
                 </p:column>
-                <p:column headerText="Fecha Creación">
-                    <h:outputText value="#{o.fechaCreacion}" />
+                <p:column headerText="Precio / Monto Aplicado">
+                    <h:outputText value="#{item.precio}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Comentario / Observaciones">
+                    <h:outputText value="#{item.observaciones}" style="font-weight: bold; color: blue;" />
+                </p:column>
+                <p:column headerText="Acción">
+                    <p:commandButton icon="pi pi-trash" actionListener="#{ordenFrm.removerProducto(item)}" 
+                                     update="tblDetalle" styleClass="ui-button-danger ui-button-flat" />
                 </p:column>
             </p:dataTable>
         </h:form>
     </ui:define>
-
 </ui:composition>

@@ -1,42 +1,224 @@
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.boundary;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.EmpleadoRolDAOInterface;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.OrdenDAO;
-import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Orden;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.ProductoDAOInterface;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.*;
 
 @Named("ordenFrm")
 @ViewScoped
 public class OrdenFrm implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Inject
     private OrdenDAO ordenDAO;
 
+    @Inject
+    private EmpleadoRolDAOInterface empleadoRolDAO;
+
+    @Inject
+    private ProductoDAOInterface productoDAO;
+
     private Orden registroSeleccionado;
     private List<Orden> registros;
+    private List<OrdenProducto> itemsOrden = new ArrayList<>();
+    private List<EmpleadoRol> listaCamareros;
+    private List<Producto> listaProductos;
+
+    private Producto productoSeleccionado;
+    private String observacionItem;
 
     @PostConstruct
     public void init() {
         this.registroSeleccionado = new Orden();
-        this.registros = ordenDAO.obtenerTodos();
+        this.registroSeleccionado.setFechaCreacion(new Date());
+        this.itemsOrden = new ArrayList<>();
+        cargarDatos();
+    }
+
+    public void cargarDatos() {
+        try {
+            this.registros = ordenDAO.obtenerTodos();
+            this.listaProductos = productoDAO.findRange(0, 100);
+
+            List<EmpleadoRol> todosRoles = empleadoRolDAO.findRange(0, 100);
+            this.listaCamareros = new ArrayList<>();
+            if (todosRoles != null) {
+                for (EmpleadoRol er : todosRoles) {
+                    if (er.getIdRol() != null && "CAMARERO".equalsIgnoreCase(er.getIdRol().getNombre())
+                            && Boolean.TRUE.equals(er.getActivo())) {
+                        this.listaCamareros.add(er);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            mensajeError("Error al cargar datos del formulario de órdenes.");
+        }
+    }
+
+    public void agregarProducto() {
+        if (productoSeleccionado == null) {
+            mensajeWarn("Debe seleccionar un producto para agregar.");
+            return;
+        }
+
+        OrdenProducto nuevoItem = new OrdenProducto();
+        nuevoItem.setIdOrdenProducto(UUID.randomUUID());
+        nuevoItem.setIdProducto(productoSeleccionado);
+        nuevoItem.setPrecio(productoSeleccionado.getPrecioSugerido());
+        nuevoItem.setObservaciones(observacionItem != null && !observacionItem.trim().isEmpty() 
+                ? observacionItem : "Precio base sugerido.");
+
+        this.itemsOrden.add(nuevoItem);
+        
+        this.productoSeleccionado = null;
+        this.observacionItem = "";
+        mensajeInfo("Producto agregado a la orden.");
+    }
+
+    public void removerProducto(OrdenProducto item) {
+        if (item != null) {
+            this.itemsOrden.remove(item);
+            mensajeInfo("Producto eliminado de la orden.");
+        }
     }
 
     public void btnGuardarHandler() {
-        if (this.registroSeleccionado.getIdOrden() == null) {
-            this.registroSeleccionado.setIdOrden(UUID.randomUUID());
-            ordenDAO.crear(this.registroSeleccionado);
-        } else {
-            ordenDAO.modificar(this.registroSeleccionado);
+        if (!esRolCamarero()) {
+            mensajeError("Solo se permite asignar órdenes a un empleado con el rol 'CAMARERO'.");
+            return;
         }
-        this.init();
+
+        if (itemsOrden.isEmpty()) {
+            mensajeWarn("Debe agregar al menos un producto a la orden.");
+            return;
+        }
+
+        try {
+            if (this.registroSeleccionado.getIdOrden() == null) {
+                this.registroSeleccionado.setIdOrden(UUID.randomUUID());
+                this.registroSeleccionado.setOrdenProductoList(itemsOrden);
+                ordenDAO.crear(this.registroSeleccionado);
+            } else {
+                ordenDAO.modificar(this.registroSeleccionado);
+            }
+
+            mensajeInfo("Orden guardada correctamente.");
+            this.init();
+        } catch (Exception e) {
+            mensajeError("Error al guardar la orden: " + e.getMessage());
+        }
     }
 
+    private boolean esRolCamarero() {
+        EmpleadoRol er = registroSeleccionado.getIdEmpleadoRol();
+        return er != null && er.getIdRol() != null && "CAMARERO".equalsIgnoreCase(er.getIdRol().getNombre());
+    }
+
+    public void aplicarDescuentosPorFecha() {
+        Date fechaOrden = registroSeleccionado.getFechaCreacion();
+
+        if (fechaOrden == null) {
+            mensajeWarn("Debe definir la fecha de la orden.");
+            return;
+        }
+
+        for (OrdenProducto item : itemsOrden) {
+            Producto prod = item.getIdProducto();
+            boolean descuentoAplicado = false;
+
+            if (prod != null && prod.getDescuentoProductoList() != null) {
+                for (DescuentoProducto dp : prod.getDescuentoProductoList()) {
+                    // Evaluación sobre DescuentoProducto
+                    if (dp.getFechaDesde() != null && dp.getFechaHasta() != null) {
+                        if (!fechaOrden.before(dp.getFechaDesde()) && !fechaOrden.after(dp.getFechaHasta())) {
+                            BigDecimal nuevoPrecio = calcularPrecioConDescuento(prod.getPrecioSugerido(), dp.getValor());
+                            item.setPrecio(nuevoPrecio);
+                            item.setObservaciones("Descuento de " + dp.getValor() + "% aplicado por rango de fechas.");
+                            descuentoAplicado = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!descuentoAplicado) {
+                item.setPrecio(prod != null ? prod.getPrecioSugerido() : BigDecimal.ZERO);
+                item.setObservaciones("Descuento no aplicable (Fecha de orden fuera del rango vigente).");
+            }
+        }
+        mensajeInfo("Cálculo de descuentos por fecha finalizado.");
+    }
+
+    public void aplicarDescuentoAbierto() {
+        for (OrdenProducto item : itemsOrden) {
+            Producto prod = item.getIdProducto();
+            boolean descuentoAplicado = false;
+
+            if (prod != null && prod.getDescuentoProductoList() != null) {
+                for (DescuentoProducto dp : prod.getDescuentoProductoList()) {
+                    // Descuento abierto: fechaHasta es nula
+                    if (dp.getFechaHasta() == null) {
+                        BigDecimal nuevoPrecio = calcularPrecioConDescuento(prod.getPrecioSugerido(), dp.getValor());
+                        item.setPrecio(nuevoPrecio);
+                        item.setObservaciones("Descuento abierto del " + dp.getValor() + "% aplicado.");
+                        descuentoAplicado = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!descuentoAplicado) {
+                item.setPrecio(prod != null ? prod.getPrecioSugerido() : BigDecimal.ZERO);
+                item.setObservaciones("Sin descuento abierto disponible.");
+            }
+        }
+        mensajeInfo("Cálculo de descuento abierto finalizado.");
+    }
+
+    private BigDecimal calcularPrecioConDescuento(BigDecimal precioOriginal, Integer porcentaje) {
+        if (precioOriginal == null || porcentaje == null) return precioOriginal;
+        BigDecimal desc = BigDecimal.valueOf(porcentaje).divide(BigDecimal.valueOf(100));
+        BigDecimal montoDescuento = precioOriginal.multiply(desc);
+        return precioOriginal.subtract(montoDescuento).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private void mensajeError(String msg) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", msg));
+    }
+
+    private void mensajeWarn(String msg) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atención", msg));
+    }
+
+    private void mensajeInfo(String msg) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", msg));
+    }
+
+    // Getters y Setters
     public Orden getRegistroSeleccionado() { return registroSeleccionado; }
     public void setRegistroSeleccionado(Orden registroSeleccionado) { this.registroSeleccionado = registroSeleccionado; }
     public List<Orden> getRegistros() { return registros; }
+    public List<OrdenProducto> getItemsOrden() { return itemsOrden; }
+    public void setItemsOrden(List<OrdenProducto> itemsOrden) { this.itemsOrden = itemsOrden; }
+    public List<EmpleadoRol> getListaCamareros() { return listaCamareros; }
+    public List<Producto> getListaProductos() { return listaProductos; }
+    public Producto getProductoSeleccionado() { return productoSeleccionado; }
+    public void setProductoSeleccionado(Producto productoSeleccionado) { this.productoSeleccionado = productoSeleccionado; }
+    public String getObservacionItem() { return observacionItem; }
+    public void setObservacionItem(String observacionItem) { this.observacionItem = observacionItem; }
 }

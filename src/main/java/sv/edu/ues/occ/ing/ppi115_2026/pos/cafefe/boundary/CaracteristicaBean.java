@@ -1,4 +1,4 @@
-package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.beans;
+package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.boundary;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -18,6 +18,8 @@ import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoCaracteristica;
 @Named("caracteristicaBean")
 @ViewScoped
 public class CaracteristicaBean implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Inject
     private CaracteristicaDAOInterface caracteristicaDAO;
@@ -45,10 +47,6 @@ public class CaracteristicaBean implements Serializable {
         this.registro.setActivo(true);
     }
 
-    /**
-     * Cumple con la regla de la Rúbrica: Retorna exclusivamente los tipos
-     * de característica en estado ACTIVO.
-     */
     public List<TipoCaracteristica> getTiposCaracteristicaActivos() {
         if (tipoCaracteristicaDAO != null) {
             return tipoCaracteristicaDAO.findRange(0, 100)
@@ -83,15 +81,9 @@ public class CaracteristicaBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, resumen, detalle));
     }
 
-    public Caracteristica getRegistro() {
-        return registro;
-    }
+    public Caracteristica getRegistro() { return registro; }
+    public void setRegistro(Caracteristica registro) { this.registro = registro; }
 
-    public void setRegistro(Caracteristica registro) {
-        this.registro = registro;
-    }
-
-    public List<Caracteristica> getLista() {
-        return lista;
-    }
+    public List<Caracteristica> getLista() { return lista; }
+    public void setLista(List<Caracteristica> lista) { this.lista = lista; }
 }

@@ -40,17 +40,17 @@
                     <h:outputText value="#{dp.valor}" />
                 </p:column>
 
-                <p:column headerText="Desde">
-                    <h:outputText value="#{dp.fechaDesde}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" type="localDateTime"/>
-                    </h:outputText>
-                </p:column>
+               <p:column headerText="Desde">
+    <h:outputText value="#{dp.fechaDesde}">
+        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/El_Salvador"/>
+    </h:outputText>
+</p:column>
 
-                <p:column headerText="Hasta">
-                    <h:outputText value="#{dp.fechaHasta}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" type="localDateTime"/>
-                    </h:outputText>
-                </p:column>
+<p:column headerText="Hasta">
+    <h:outputText value="#{dp.fechaHasta}">
+        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/El_Salvador"/>
+    </h:outputText>
+</p:column>
 
                 <p:column headerText="Observaciones">
                     <h:outputText value="#{dp.observaciones}" />

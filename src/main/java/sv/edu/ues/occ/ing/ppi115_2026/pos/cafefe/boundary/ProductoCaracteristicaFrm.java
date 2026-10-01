@@ -9,6 +9,7 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.CaracteristicaDAOInterface;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.ProductoCaracteristicaDAOInterface;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control.ProductoDAOInterface;
@@ -67,6 +68,21 @@ public class ProductoCaracteristicaFrm implements Serializable {
             if (idProductoSeleccionado != null && idCaracteristicaSeleccionada != null) {
                 Producto prod = productoDAO.find(idProductoSeleccionado);
                 Caracteristica car = caracteristicaDAO.find(idCaracteristicaSeleccionada);
+
+                // Validación de Expresión Regular exigida por la rúbrica
+                if (car != null && car.getIdTipoCaracteristica() != null 
+                        && car.getIdTipoCaracteristica().getExpresionRegular() != null) {
+                    
+                    String regex = car.getIdTipoCaracteristica().getExpresionRegular();
+                    String valor = registroSeleccionado.getValor();
+
+                    if (valor == null || !Pattern.matches(regex, valor)) {
+                        FacesContext.getCurrentInstance().addMessage(null,
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error de Validación", 
+                                        "El valor ingresado no cumple con la Expresión Regular: " + regex));
+                        return;
+                    }
+                }
 
                 registroSeleccionado.setIdProducto(prod);
                 registroSeleccionado.setIdCaracteristica(car);
