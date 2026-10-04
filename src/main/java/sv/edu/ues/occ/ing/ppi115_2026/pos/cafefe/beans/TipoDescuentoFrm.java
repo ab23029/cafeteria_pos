@@ -60,26 +60,24 @@ public class TipoDescuentoFrm implements Serializable {
         guardar();
     }
 
-    public void guardar() {
-        try {
-            if (this.registroSeleccionado != null) {
-                if (this.registroSeleccionado.getIdTipoDescuento() == null) {
-                    this.registroSeleccionado.setIdTipoDescuento(UUID.randomUUID());
-                }
+public void guardar() {
+    try {
+        if (this.registroSeleccionado != null) {
+            if (this.registroSeleccionado.getIdTipoDescuento() == null) {
+                this.registroSeleccionado.setIdTipoDescuento(UUID.randomUUID());
                 tipoDescuentoDAO.create(this.registroSeleccionado);
-                
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Tipo de descuento guardado correctamente"));
-
-                btnNuevoHandler();
-                cargarRegistros();
+            } else {
+                tipoDescuentoDAO.edit(this.registroSeleccionado);
             }
-        } catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al guardar", ex);
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo guardar el tipo de descuento"));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Tipo de Descuento guardado correctamente"));
+            btnNuevoHandler();
+            cargarRegistros();
         }
+    } catch (Exception ex) {
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al guardar TipoDescuento", ex);
     }
+}
 
     public List<TipoDescuento> getModelo() {
         return registros;

@@ -40,20 +40,28 @@
                     <h:outputText value="#{dp.valor}" />
                 </p:column>
 
-               <p:column headerText="Desde">
-    <h:outputText value="#{dp.fechaDesde}">
-        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/El_Salvador"/>
-    </h:outputText>
-</p:column>
+                <p:column headerText="Desde">
+                    <h:outputText value="#{dp.fechaDesde}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/El_Salvador"/>
+                    </h:outputText>
+                </p:column>
 
-<p:column headerText="Hasta">
-    <h:outputText value="#{dp.fechaHasta}">
-        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/El_Salvador"/>
-    </h:outputText>
-</p:column>
+                <p:column headerText="Hasta">
+                    <h:outputText value="#{dp.fechaHasta}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/El_Salvador"/>
+                    </h:outputText>
+                </p:column>
 
                 <p:column headerText="Observaciones">
                     <h:outputText value="#{dp.observaciones}" />
+                </p:column>
+
+                <p:column headerText="Acciones">
+                    <p:commandButton icon="pi pi-pencil" 
+                                     actionListener="#{descuentoProductoFrm.seleccionarRegistro(dp)}" 
+                                     update=":frmNuevo" 
+                                     oncomplete="PF('dlgNuevo').show()" 
+                                     process="@this" />
                 </p:column>
             </p:dataTable>
         </h:form>
@@ -62,14 +70,20 @@
             <h:form id="frmNuevo">
                 <h:panelGrid columns="2" cellpadding="5">
                     <p:outputLabel value="Producto:" for="cboProducto" />
-                    <p:selectOneMenu id="cboProducto" value="#{descuentoProductoFrm.idProductoSeleccionado}" required="true">
+                    <p:selectOneMenu id="cboProducto" 
+                                     value="#{descuentoProductoFrm.idProductoSeleccionado}" 
+                                     disabled="#{descuentoProductoFrm.registroSeleccionado.idDescuentoProducto != null}" 
+                                     required="true">
                         <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
                         <f:selectItems value="#{descuentoProductoFrm.listaProductos}" var="prod" 
                                        itemLabel="#{prod.nombre}" itemValue="#{prod.idProducto}" />
                     </p:selectOneMenu>
 
                     <p:outputLabel value="Descuento:" for="cboDescuento" />
-                    <p:selectOneMenu id="cboDescuento" value="#{descuentoProductoFrm.idDescuentoSeleccionado}" required="true">
+                    <p:selectOneMenu id="cboDescuento" 
+                                     value="#{descuentoProductoFrm.idDescuentoSeleccionado}" 
+                                     disabled="#{descuentoProductoFrm.registroSeleccionado.idDescuentoProducto != null}" 
+                                     required="true">
                         <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
                         <f:selectItems value="#{descuentoProductoFrm.listaDescuentos}" var="desc" 
                                        itemLabel="#{desc.nombre}" itemValue="#{desc.idDescuento}" />

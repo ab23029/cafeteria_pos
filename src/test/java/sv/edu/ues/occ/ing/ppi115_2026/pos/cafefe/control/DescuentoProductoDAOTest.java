@@ -7,18 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoDescuento;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.DescuentoProducto;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class TipoDescuentoDAOTest {
+public class DescuentoProductoDAOTest {
 
     @Mock
     private EntityManager em;
 
     @InjectMocks
-    private TipoDescuentoDAO tipoDescuentoDAO;
+    private DescuentoProductoDAO descuentoProductoDAO;
 
     @BeforeEach
     public void setUp() {
@@ -27,40 +27,40 @@ public class TipoDescuentoDAOTest {
 
     @Test
     public void testCreate() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
-        tipoDescuentoDAO.create(entidad);
+        DescuentoProducto entidad = new DescuentoProducto();
+        entidad.setIdDescuentoProducto(UUID.randomUUID());
+        descuentoProductoDAO.create(entidad);
         verify(em, times(1)).persist(entidad);
     }
 
     @Test
     public void testFind() {
         UUID id = UUID.randomUUID();
-        TipoDescuento esperada = new TipoDescuento();
-        esperada.setIdTipoDescuento(id);
-        when(em.find(TipoDescuento.class, id)).thenReturn(esperada);
+        DescuentoProducto esperada = new DescuentoProducto();
+        esperada.setIdDescuentoProducto(id);
+        when(em.find(DescuentoProducto.class, id)).thenReturn(esperada);
 
-        TipoDescuento resultado = tipoDescuentoDAO.find(id);
+        DescuentoProducto resultado = descuentoProductoDAO.find(id);
         assertNotNull(resultado);
-        assertEquals(id, resultado.getIdTipoDescuento());
+        assertEquals(id, resultado.getIdDescuentoProducto());
     }
 
     @Test
     public void testEdit() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
-        tipoDescuentoDAO.edit(entidad);
+        DescuentoProducto entidad = new DescuentoProducto();
+        entidad.setIdDescuentoProducto(UUID.randomUUID());
+        descuentoProductoDAO.edit(entidad);
         verify(em, times(1)).merge(entidad);
     }
 
     @Test
     public void testRemove() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
+        DescuentoProducto entidad = new DescuentoProducto();
+        entidad.setIdDescuentoProducto(UUID.randomUUID());
 
         when(em.merge(entidad)).thenReturn(entidad);
 
-        tipoDescuentoDAO.remove(entidad);
+        descuentoProductoDAO.remove(entidad);
 
         verify(em, times(1)).merge(entidad);
         verify(em, times(1)).remove(entidad);

@@ -7,18 +7,19 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoDescuento;
+// IMPORTA LA ENTIDAD Y EL DAO DE EMPLEADO
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Empleado;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class TipoDescuentoDAOTest {
+public class EmpleadoDAOTest {
 
     @Mock
     private EntityManager em;
 
     @InjectMocks
-    private TipoDescuentoDAO tipoDescuentoDAO;
+    private EmpleadoDAO empleadoDAO;
 
     @BeforeEach
     public void setUp() {
@@ -27,40 +28,40 @@ public class TipoDescuentoDAOTest {
 
     @Test
     public void testCreate() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
-        tipoDescuentoDAO.create(entidad);
+        Empleado entidad = new Empleado();
+        entidad.setIdEmpleado(UUID.randomUUID());
+        empleadoDAO.create(entidad);
         verify(em, times(1)).persist(entidad);
     }
 
     @Test
     public void testFind() {
         UUID id = UUID.randomUUID();
-        TipoDescuento esperada = new TipoDescuento();
-        esperada.setIdTipoDescuento(id);
-        when(em.find(TipoDescuento.class, id)).thenReturn(esperada);
+        Empleado esperada = new Empleado();
+        esperada.setIdEmpleado(id);
+        when(em.find(Empleado.class, id)).thenReturn(esperada);
 
-        TipoDescuento resultado = tipoDescuentoDAO.find(id);
+        Empleado resultado = empleadoDAO.find(id);
         assertNotNull(resultado);
-        assertEquals(id, resultado.getIdTipoDescuento());
+        assertEquals(id, resultado.getIdEmpleado());
     }
 
     @Test
     public void testEdit() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
-        tipoDescuentoDAO.edit(entidad);
+        Empleado entidad = new Empleado();
+        entidad.setIdEmpleado(UUID.randomUUID());
+        empleadoDAO.edit(entidad);
         verify(em, times(1)).merge(entidad);
     }
 
     @Test
     public void testRemove() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
+       Empleado entidad = new Empleado();
+        entidad.setIdEmpleado(UUID.randomUUID());
 
         when(em.merge(entidad)).thenReturn(entidad);
 
-        tipoDescuentoDAO.remove(entidad);
+        empleadoDAO.remove(entidad);
 
         verify(em, times(1)).merge(entidad);
         verify(em, times(1)).remove(entidad);

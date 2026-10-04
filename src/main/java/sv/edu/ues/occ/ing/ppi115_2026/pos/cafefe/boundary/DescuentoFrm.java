@@ -43,13 +43,13 @@ public class DescuentoFrm implements Serializable {
         this.registro = new Descuento();
         this.idTipoDescuentoSeleccionado = null;
     }
-public void cargarDatos() {
+
+    public void cargarDatos() {
         try {
             if (descuentoDAO != null) {
                 this.listaRegistros = descuentoDAO.findRange(0, 100);
             }
             if (tipoDescuentoDAO != null) {
-                // Filtramos únicamente los tipos activos de la lista cargada
                 List<TipoDescuento> todos = tipoDescuentoDAO.findRange(0, 100);
                 if (todos != null) {
                     this.listaTiposDescuento = todos.stream()
@@ -62,30 +62,41 @@ public void cargarDatos() {
         }
     }
 
+    public void seleccionarRegistro(Descuento d) {
+        this.registro = d;
+        if (d != null && d.getIdTipoDescuento() != null) {
+            this.idTipoDescuentoSeleccionado = d.getIdTipoDescuento().getIdTipoDescuento();
+        } else {
+            this.idTipoDescuentoSeleccionado = null;
+        }
+    }
+
     public void btnGuardarHandler() {
         try {
             if (registro != null && idTipoDescuentoSeleccionado != null) {
-                // Buscamos el tipo seleccionado dentro de la lista de activos
-                TipoDescuento td = listaTiposDescuento.stream()
-                        .filter(t -> idTipoDescuentoSeleccionado.equals(t.getIdTipoDescuento()))
-                        .findFirst()
-                        .orElse(null);
+                
+                TipoDescuento td = tipoDescuentoDAO.find(idTipoDescuentoSeleccionado);
 
-                if (td != null) {
-                    if (registro.getIdDescuento() == null) {
-                        registro.setIdDescuento(UUID.randomUUID());
-                    }
-                    registro.setIdTipoDescuento(td);
-                    descuentoDAO.create(registro);
-
+                if (td == null || !Boolean.TRUE.equals(td.getActivo())) {
                     FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Descuento registrado correctamente"));
-                    limpiar();
-                    cargarDatos();
-                } else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El Tipo de Descuento seleccionado no es válido"));
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El Tipo de Descuento seleccionado está inactivo o no existe."));
+                    return;
                 }
+
+                registro.setIdTipoDescuento(td);
+
+                if (registro.getIdDescuento() == null) {
+                    registro.setIdDescuento(UUID.randomUUID());
+                    descuentoDAO.create(registro);
+                } else {
+                    descuentoDAO.edit(registro);
+                }
+
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Descuento registrado correctamente"));
+
+                limpiar();
+                cargarDatos();
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Seleccione un Tipo de Descuento válido"));

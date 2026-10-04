@@ -7,18 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoDescuento;
+import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.Pago;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class TipoDescuentoDAOTest {
+public class PagoDAOTest {
 
     @Mock
     private EntityManager em;
 
     @InjectMocks
-    private TipoDescuentoDAO tipoDescuentoDAO;
+    private PagoDAO pagoDAO;
 
     @BeforeEach
     public void setUp() {
@@ -27,42 +27,42 @@ public class TipoDescuentoDAOTest {
 
     @Test
     public void testCreate() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
-        tipoDescuentoDAO.create(entidad);
+        Pago entidad = new Pago();
+        entidad.setIdPago(UUID.randomUUID());
+        pagoDAO.create(entidad);
         verify(em, times(1)).persist(entidad);
     }
 
     @Test
     public void testFind() {
         UUID id = UUID.randomUUID();
-        TipoDescuento esperada = new TipoDescuento();
-        esperada.setIdTipoDescuento(id);
-        when(em.find(TipoDescuento.class, id)).thenReturn(esperada);
+        Pago esperada = new Pago();
+        esperada.setIdPago(id);
+        when(em.find(Pago.class, id)).thenReturn(esperada);
 
-        TipoDescuento resultado = tipoDescuentoDAO.find(id);
+        Pago resultado = pagoDAO.find(id);
         assertNotNull(resultado);
-        assertEquals(id, resultado.getIdTipoDescuento());
+        assertEquals(id, resultado.getIdPago());
     }
 
     @Test
     public void testEdit() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
-        tipoDescuentoDAO.edit(entidad);
+        Pago entidad = new Pago();
+        entidad.setIdPago(UUID.randomUUID());
+        pagoDAO.edit(entidad);
         verify(em, times(1)).merge(entidad);
     }
 
     @Test
     public void testRemove() {
-        TipoDescuento entidad = new TipoDescuento();
-        entidad.setIdTipoDescuento(UUID.randomUUID());
+        Pago entidad = new Pago();
+        entidad.setIdPago(UUID.randomUUID());
 
         when(em.merge(entidad)).thenReturn(entidad);
 
-        tipoDescuentoDAO.remove(entidad);
+        pagoDAO.remove(entidad);
 
         verify(em, times(1)).merge(entidad);
-        verify(em, times(1)).remove(entidad);
+        verify(em, times(1)).remove(entidad);;
     }
 }

@@ -68,6 +68,7 @@
                     <p:selectOneMenu id="cboTipo" 
                                      value="#{caracteristicaBean.registro.idTipoCaracteristica}" 
                                      converter="tipoCaracteristicaConverter"
+                                     disabled="#{caracteristicaBean.registro.idCaracteristica != null}"
                                      required="true"
                                      requiredMessage="Debe seleccionar un Tipo de Característica">
                         <f:selectItem itemLabel="-- Seleccione un tipo --" itemValue="#{null}" noSelectionOption="true" />

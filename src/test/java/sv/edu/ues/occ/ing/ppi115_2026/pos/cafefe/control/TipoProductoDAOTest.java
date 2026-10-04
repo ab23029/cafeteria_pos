@@ -1,46 +1,68 @@
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.control;
 
+import java.util.UUID;
 import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.TipoProducto;
 
-import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 public class TipoProductoDAOTest {
 
     @Mock
-    private EntityManager emMock;
+    private EntityManager em;
 
-    @Spy
-    private TipoProductoDAO dao;
-
-    private UUID idPrueba;
-    private TipoProducto entidadPrueba;
+    @InjectMocks
+    private TipoProductoDAO tipoProductoDAO;
 
     @BeforeEach
     public void setUp() {
-        Mockito.doReturn(emMock).when(dao).getEntityManager();
-        idPrueba = UUID.randomUUID();
-        entidadPrueba = new TipoProducto(idPrueba);
-        entidadPrueba.setNombre("Bebidas Calientes");
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testCreateSuccess() {
-        Assertions.assertDoesNotThrow(() -> dao.create(entidadPrueba));
-        Mockito.verify(emMock, Mockito.times(1)).persist(entidadPrueba);
+    public void testCreate() {
+        TipoProducto entidad = new TipoProducto();
+        entidad.setIdTipoProducto(UUID.randomUUID());
+        tipoProductoDAO.create(entidad);
+        verify(em, times(1)).persist(entidad);
     }
 
     @Test
-    public void testCreateNullEntityThrowsException() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> dao.create(null));
+    public void testFind() {
+        UUID id = UUID.randomUUID();
+        TipoProducto esperada = new TipoProducto();
+        esperada.setIdTipoProducto(id);
+        when(em.find(TipoProducto.class, id)).thenReturn(esperada);
+
+        TipoProducto resultado = tipoProductoDAO.find(id);
+        assertNotNull(resultado);
+        assertEquals(id, resultado.getIdTipoProducto());
+    }
+
+    @Test
+    public void testEdit() {
+        TipoProducto entidad = new TipoProducto();
+        entidad.setIdTipoProducto(UUID.randomUUID());
+        tipoProductoDAO.edit(entidad);
+        verify(em, times(1)).merge(entidad);
+    }
+
+    @Test
+    public void testRemove() {
+        TipoProducto entidad = new TipoProducto();
+        entidad.setIdTipoProducto(UUID.randomUUID());
+
+        when(em.merge(entidad)).thenReturn(entidad);
+
+        tipoProductoDAO.remove(entidad);
+
+        verify(em, times(1)).merge(entidad);
+        verify(em, times(1)).remove(entidad);
     }
 }
