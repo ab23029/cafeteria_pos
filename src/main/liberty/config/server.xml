@@ -12,9 +12,9 @@
         <properties.postgresql
             serverName="localhost"
             portNumber="5432"
-            databaseName="pos_ppi115"
+            databaseName="cafeteria_pos"
             user="postgres"
-            password="postgrespassword"/>
+            password="clave77"/>
     </dataSource>
 
     <library id="PostgreSQLDriver">

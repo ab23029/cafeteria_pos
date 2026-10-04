@@ -59,9 +59,13 @@ public class OrdenFrm implements Serializable {
             this.listaCamareros = new ArrayList<>();
             if (todosRoles != null) {
                 for (EmpleadoRol er : todosRoles) {
-                    if (er.getIdRol() != null && "CAMARERO".equalsIgnoreCase(er.getIdRol().getNombre())
-                            && Boolean.TRUE.equals(er.getActivo())) {
-                        this.listaCamareros.add(er);
+                    if (er.getIdRol() != null && er.getIdRol().getNombre() != null) {
+                        String nombreRol = er.getIdRol().getNombre().trim();
+                        
+                        // Permite reconocer "Camarero", "CAMARERO", "camarero", etc.
+                        if ("CAMARERO".equalsIgnoreCase(nombreRol) && Boolean.TRUE.equals(er.getActivo())) {
+                            this.listaCamareros.add(er);
+                        }
                     }
                 }
             }
@@ -72,22 +76,26 @@ public class OrdenFrm implements Serializable {
 
     public void agregarProducto() {
         if (productoSeleccionado == null) {
-            mensajeWarn("Debe seleccionar un producto para agregar.");
-            return;
-        }
+        mensajeWarn("Debe seleccionar un producto para agregar.");
+        return;
+    }
 
-        OrdenProducto nuevoItem = new OrdenProducto();
-        nuevoItem.setIdOrdenProducto(UUID.randomUUID());
-        nuevoItem.setIdProducto(productoSeleccionado);
-        nuevoItem.setPrecio(productoSeleccionado.getPrecioSugerido());
-        nuevoItem.setObservaciones(observacionItem != null && !observacionItem.trim().isEmpty() 
-                ? observacionItem : "Precio base sugerido.");
+    OrdenProducto nuevoItem = new OrdenProducto();
+    nuevoItem.setIdOrdenProducto(UUID.randomUUID());
+    nuevoItem.setIdProducto(productoSeleccionado);
+    
+    // ASIGNAR LA RELACIÓN DE LA ORDEN PADRE
+    nuevoItem.setIdOrden(this.registroSeleccionado); 
+    
+    nuevoItem.setPrecio(productoSeleccionado.getPrecioSugerido());
+    nuevoItem.setObservaciones(observacionItem != null && !observacionItem.trim().isEmpty() 
+            ? observacionItem : "Precio base sugerido.");
 
-        this.itemsOrden.add(nuevoItem);
-        
-        this.productoSeleccionado = null;
-        this.observacionItem = "";
-        mensajeInfo("Producto agregado a la orden.");
+    this.itemsOrden.add(nuevoItem);
+    
+    this.productoSeleccionado = null;
+    this.observacionItem = "";
+    mensajeInfo("Producto agregado a la orden.");
     }
 
     public void removerProducto(OrdenProducto item) {
@@ -98,31 +106,50 @@ public class OrdenFrm implements Serializable {
     }
 
     public void btnGuardarHandler() {
-        if (!esRolCamarero()) {
-            mensajeError("Solo se permite asignar órdenes a un empleado con el rol 'CAMARERO'.");
-            return;
-        }
-
-        if (itemsOrden.isEmpty()) {
-            mensajeWarn("Debe agregar al menos un producto a la orden.");
-            return;
-        }
-
-        try {
-            if (this.registroSeleccionado.getIdOrden() == null) {
-                this.registroSeleccionado.setIdOrden(UUID.randomUUID());
-                this.registroSeleccionado.setOrdenProductoList(itemsOrden);
-                ordenDAO.crear(this.registroSeleccionado);
-            } else {
-                ordenDAO.modificar(this.registroSeleccionado);
-            }
-
-            mensajeInfo("Orden guardada correctamente.");
-            this.init();
-        } catch (Exception e) {
-            mensajeError("Error al guardar la orden: " + e.getMessage());
-        }
+      if (this.registroSeleccionado.getIdEmpleadoRol() == null) {
+        mensajeError("Debe seleccionar un empleado camarero.");
+        return;
     }
+
+    if (this.itemsOrden == null || this.itemsOrden.isEmpty()) {
+        mensajeWarn("Debe agregar al menos un producto a la orden.");
+        return;
+    }
+
+    try {
+        if (this.registroSeleccionado.getIdOrden() == null) {
+            // 1. Asignar ID a la orden
+            this.registroSeleccionado.setIdOrden(UUID.randomUUID());
+
+            // 2. Enlazar cada detalle con esta orden padre
+            for (OrdenProducto op : this.itemsOrden) {
+                op.setIdOrden(this.registroSeleccionado);
+            }
+            this.registroSeleccionado.setOrdenProductoList(this.itemsOrden);
+
+            // 3. Persistir
+            ordenDAO.crear(this.registroSeleccionado);
+            mensajeInfo("Orden creada exitosamente.");
+        } else {
+            ordenDAO.modificar(this.registroSeleccionado);
+            mensajeInfo("Orden modificada correctamente.");
+        }
+
+        limpiarFormulario();
+    } catch (Exception e) {
+        mensajeError("Error al guardar la orden: " + e.getMessage());
+    }
+    }
+
+    private void limpiarFormulario() {
+        this.registroSeleccionado = new Orden();
+        this.registroSeleccionado.setFechaCreacion(new Date());
+        this.itemsOrden = new ArrayList<>();
+        this.productoSeleccionado = null;
+        this.observacionItem = "";
+        cargarDatos(); // Vuelve a traer la lista de órdenes actualizada de la BD
+    }
+
 
     private boolean esRolCamarero() {
         EmpleadoRol er = registroSeleccionado.getIdEmpleadoRol();

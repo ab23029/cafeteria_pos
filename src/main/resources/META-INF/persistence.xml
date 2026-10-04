@@ -28,8 +28,9 @@
     <class>sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.FacturaOrdenProducto</class>
     
     <properties>
-      <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+      <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
       <property name="eclipselink.target-database" value="PostgreSQL"/>
+      <property name="eclipselink.jdbc.property.stringtype" value="unspecified"/>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
     </properties>

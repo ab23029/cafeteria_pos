@@ -14,11 +14,17 @@
 
             <p:panel header="Formulario de Orden">
                 <h:panelGrid columns="2" cellpadding="5">
-                    <p:outputLabel for="empRol" value="Empleado (Camarero):" />
-                    <p:selectOneMenu id="empRol" value="#{ordenFrm.registroSeleccionado.idEmpleadoRol}" converter="entityConverter" required="true">
-                        <f:selectItem itemLabel="-- Seleccione Camarero --" itemValue="#{null}" />
-                        <f:selectItems value="#{ordenFrm.listaCamareros}" var="er" 
-                                       itemLabel="#{er.idEmpleado.nombre} - #{er.idRol.nombre}" itemValue="#{er}" />
+                    <p:outputLabel for="empRol" value="Empleado (Camarero): *" />
+                    <p:selectOneMenu id="empRol"
+                                     value="#{ordenFrm.registroSeleccionado.idEmpleadoRol}"
+                                     converter="entityConverter"
+                                     required="true"
+                                     requiredMessage="Debe seleccionar un empleado con el rol Camarero">
+                        <f:selectItem itemLabel="-- Seleccione Camarero --" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{ordenFrm.listaCamareros}"
+                                       var="er"
+                                       itemLabel="#{er.idEmpleado != null ? er.idEmpleado.nombre.concat(' ').concat(er.idEmpleado.apellido) : ''}"
+                                       itemValue="#{er}" />
                     </p:selectOneMenu>
 
                     <p:outputLabel for="fechaCreacion" value="Fecha Orden:" />
@@ -80,5 +86,6 @@
                 </p:column>
             </p:dataTable>
         </h:form>
+        
     </ui:define>
 </ui:composition>

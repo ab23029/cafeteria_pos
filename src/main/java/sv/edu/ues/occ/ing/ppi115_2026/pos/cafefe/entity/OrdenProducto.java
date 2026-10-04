@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity;
 
 import jakarta.persistence.Basic;
@@ -10,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -19,15 +14,10 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.UUID;
-import java.util.UUID;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
-/**
- *
- * @author brandon
- */
 @Entity
 @Table(name = "orden_producto")
 @NamedQueries({
@@ -36,24 +26,28 @@ import java.util.List;
     @NamedQuery(name = "OrdenProducto.findByObservaciones", query = "SELECT o FROM OrdenProducto o WHERE o.observaciones = :observaciones")})
 public class OrdenProducto implements Serializable {
 
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
-    private String observaciones;
-
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_orden_producto")
     private UUID idOrdenProducto;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+
+    @Size(max = 2147483647)
+    @Column(name = "observaciones")
+    private String observaciones;
+
     @Column(name = "precio")
     private BigDecimal precio;
+
     @OneToMany(mappedBy = "idOrdenProducto", fetch = FetchType.LAZY)
     private List<FacturaOrdenProducto> facturaOrdenProductoList;
+
     @JoinColumn(name = "id_orden", referencedColumnName = "id_orden")
     @ManyToOne(fetch = FetchType.LAZY)
     private Orden idOrden;
+
     @JoinColumn(name = "id_producto", referencedColumnName = "id_producto")
     @ManyToOne(fetch = FetchType.LAZY)
     private Producto idProducto;
@@ -81,7 +75,6 @@ public class OrdenProducto implements Serializable {
         this.precio = precio;
     }
 
-
     public List<FacturaOrdenProducto> getFacturaOrdenProductoList() {
         return facturaOrdenProductoList;
     }
@@ -106,6 +99,14 @@ public class OrdenProducto implements Serializable {
         this.idProducto = idProducto;
     }
 
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -115,7 +116,6 @@ public class OrdenProducto implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof OrdenProducto)) {
             return false;
         }
@@ -130,13 +130,4 @@ public class OrdenProducto implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ing.ppi115_2026.pos.cafefe.entity.OrdenProducto[ idOrdenProducto=" + idOrdenProducto + " ]";
     }
-
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
-    }
-    
 }

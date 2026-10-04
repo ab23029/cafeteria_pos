@@ -10,7 +10,8 @@
     <ui:define name="header_titulo">Asignar Tipos a Productos</ui:define>
 
     <ui:define name="contenido">
-        <p:messages id="messages" showDetail="true" closable="true" />
+
+       
 
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
             
@@ -45,7 +46,7 @@
                        <p:commandButton value="Guardar" 
                  actionListener="#{productoTipoProductoFrm.guardar()}" 
                  process="@form"
-                 update=":frmTabla:tblProductoTipo :frmNuevo :messages" 
+                 update=":frmTabla:tblProductoTipo :frmNuevo" 
                  icon="pi pi-save" 
                  styleClass="ui-button-primary" style="flex: 1;" />
                             
