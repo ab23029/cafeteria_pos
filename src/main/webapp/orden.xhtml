@@ -33,6 +33,7 @@
 
                 <p:separator/>
 
+                <!-- Sección para agregar productos a la Orden -->
                 <p:panel header="Agregar Producto a la Orden" style="margin-bottom: 10px;">
                     <h:panelGrid columns="4" cellpadding="5">
                         <p:outputLabel for="cboProd" value="Producto:" />
@@ -48,24 +49,25 @@
                                      update="tblDetalle cboProd obsItem messages" icon="pi pi-plus" styleClass="ui-button-info" />
                 </p:panel>
 
-                <!-- Acciones Unificadas -->
-                <h:panelGrid columns="2" cellpadding="5">
-                    <p:commandButton value="Calcular y Aplicar Descuentos" 
-                                     actionListener="#{ordenFrm.aplicarDescuentosAutomaticos()}" 
-                                     update="tblDetalle :frmOrden:messages" 
-                                     icon="pi pi-percentage" 
-                                     styleClass="ui-button-warning" />
+                <!-- Botones de evaluación -->
+                <h:panelGrid columns="3" cellpadding="5">
+                    <p:commandButton value="Aplicar Descuento por Fechas" 
+                                     actionListener="#{ordenFrm.aplicarDescuentosPorFecha()}" 
+                                     update="tblDetalle :frmOrden:messages" styleClass="ui-button-warning" />
+
+                    <p:commandButton value="Aplicar Descuento Abierto" 
+                                     actionListener="#{ordenFrm.aplicarDescuentoAbierto()}" 
+                                     update="tblDetalle :frmOrden:messages" styleClass="ui-button-help" />
 
                     <p:commandButton value="Guardar Orden" 
                                      actionListener="#{ordenFrm.btnGuardarHandler()}" 
-                                     update="frmOrden" 
-                                     icon="pi pi-save" 
-                                     styleClass="ui-button-success" />
+                                     update="frmOrden" icon="pi pi-save" styleClass="ui-button-success" />
                 </h:panelGrid>
             </p:panel>
 
             <p:spacer height="15" />
 
+            <!-- Tabla de detalle -->
             <p:dataTable value="#{ordenFrm.itemsOrden}" var="item" id="tblDetalle" emptyMessage="No hay productos agregados a esta orden.">
                 <p:column headerText="Producto">
                     <h:outputText value="#{item.idProducto.nombre}" />
@@ -84,5 +86,6 @@
                 </p:column>
             </p:dataTable>
         </h:form>
+        
     </ui:define>
 </ui:composition>

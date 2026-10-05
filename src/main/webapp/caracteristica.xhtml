@@ -65,16 +65,15 @@
                     <p:inputText id="id" value="#{caracteristicaBean.registro.idCaracteristica}" disabled="true" placeholder="UUID Automático" />
 
                     <p:outputLabel for="cboTipo" value="Tipo de Característica (Solo Activos):" />
-                    <p:selectOneMenu id="cboTipo" 
-                                     value="#{caracteristicaBean.registro.idTipoCaracteristica}" 
+                    <p:selectOneMenu id="cboTipo"
+                                     value="#{caracteristicaBean.registro.idTipoCaracteristica}"
                                      converter="tipoCaracteristicaConverter"
-                                     disabled="#{caracteristicaBean.registro.idCaracteristica != null}"
                                      required="true"
                                      requiredMessage="Debe seleccionar un Tipo de Característica">
                         <f:selectItem itemLabel="-- Seleccione un tipo --" itemValue="#{null}" noSelectionOption="true" />
-                        <f:selectItems value="#{caracteristicaBean.tiposCaracteristicaActivos}" 
-                                       var="tipo" 
-                                       itemLabel="#{tipo.nombre}" 
+                        <f:selectItems value="#{caracteristicaBean.tiposCaracteristicaActivos}"
+                                       var="tipo"
+                                       itemLabel="#{tipo.nombre}"
                                        itemValue="#{tipo}" />
                     </p:selectOneMenu>
 
@@ -89,10 +88,10 @@
                 </h:panelGrid>
 
                 <br/>
-                <p:commandButton value="Guardar" 
-                                 actionListener="#{caracteristicaBean.guardar()}" 
-                                 update=":frmTabla:dtCaracteristica :messages" 
-                                 oncomplete="if (!args.validationFailed) PF('dlgNuevo').hide()" 
+                <p:commandButton value="Guardar"
+                                 actionListener="#{caracteristicaBean.guardar()}"
+                                 update=":frmTabla:dtCaracteristica :messages"
+                                 oncomplete="if (!args.validationFailed) PF('dlgNuevo').hide()"
                                  icon="pi pi-check" />
             </h:form>
         </p:dialog>

@@ -57,38 +57,24 @@ public class CaracteristicaBean implements Serializable {
         return List.of();
     }
 
-public void guardar() {
-    if (registro == null || registro.getIdTipoCaracteristica() == null || !Boolean.TRUE.equals(registro.getIdTipoCaracteristica().getActivo())) {
-        mostrarMensaje("Error", "No se puede asignar un Tipo de Característica inactivo.");
-        return;
-    }
-
-    // VALIDACIÓN DE EXPRESIÓN REGULAR SOBRE EL CAMPO 'nombre'
-    TipoCaracteristica tipo = registro.getIdTipoCaracteristica();
-    if (tipo.getExpresionRegular() != null && !tipo.getExpresionRegular().isBlank()) {
-        if (registro.getNombre() == null || !registro.getNombre().matches(tipo.getExpresionRegular())) {
-            mostrarMensaje("Error de Validación", "El nombre ingresado no cumple con la expresión regular del tipo (" + tipo.getExpresionRegular() + ").");
-            return;
-        }
-    }
-
-    try {
-        if (caracteristicaDAO != null) {
-            if (registro.getIdCaracteristica() == null) {
-                registro.setIdCaracteristica(UUID.randomUUID());
-                caracteristicaDAO.create(registro);
-                mostrarMensaje("Éxito", "Característica creada correctamente");
-            } else {
-                caracteristicaDAO.edit(registro);
-                mostrarMensaje("Éxito", "Característica actualizada correctamente");
+    public void guardar() {
+        try {
+            if (registro != null && caracteristicaDAO != null) {
+                if (registro.getIdCaracteristica() == null) {
+                    registro.setIdCaracteristica(UUID.randomUUID());
+                    caracteristicaDAO.create(registro);
+                    mostrarMensaje("Éxito", "Característica creada correctamente");
+                } else {
+                    caracteristicaDAO.edit(registro);
+                    mostrarMensaje("Éxito", "Característica actualizada correctamente");
+                }
+                limpiar();
+                cargarLista();
             }
-            limpiar();
-            cargarLista();
+        } catch (Exception e) {
+            mostrarMensaje("Error", "No se pudo guardar la característica: " + e.getMessage());
         }
-    } catch (Exception e) {
-        mostrarMensaje("Error", "No se pudo guardar la característica: " + e.getMessage());
     }
-}
 
     private void mostrarMensaje(String resumen, String detalle) {
         FacesContext.getCurrentInstance().addMessage(null,
